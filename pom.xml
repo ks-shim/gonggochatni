@@ -9,9 +9,6 @@
     <packaging>pom</packaging>
 
     <version>1.0-SNAPSHOT</version>
-    <modules>
-        <module>common</module>
-    </modules>
 
     <!-- properties -->
     <properties>
@@ -22,6 +19,13 @@
         <log4j2.version>2.8.2</log4j2.version>
         <lucene.version>7.4.0</lucene.version>
     </properties>
+
+    <!-- modules -->
+    <modules>
+        <module>common</module>
+        <module>core</module>
+        <module>crawler</module>
+    </modules>
 
     <!-- dependencies -->
     <dependencies>
