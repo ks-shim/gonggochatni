@@ -27,6 +27,7 @@
         <module>crawler</module>
         <module>indexing</module>
         <module>searching</module>
+        <module>allinone-data-service</module>
     </modules>
 
     <!-- dependencies -->
