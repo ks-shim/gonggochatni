@@ -35,45 +35,8 @@ public class JobCrawler {
 
     enum XMLNode {
 
-        JOBS("jobs"),
         JOB("job"),
-
-        ID("id"),
-        URL("url"),
-        ACTIVE("active"),
-        POSTING_TIMESTAMP("posting-timestamp"),
-        MODIFICATION_TIMESTAMP("modification-timestamp"),
-        OPENING_TIMESTAMP("opening-timestamp"),
-        EXPIRATION_TIMESTAMP("expiration-timestamp"),
-
-        CLOSE_TYPE("close-type"),
-        CLOSE_TYPE_CODE("code"),
-
-        COMPANY("company"),
-        COMPANY_NAME("name"),
-        COMPNAY_NAME_HREF("href"),
-
-        POSITION("position"),
-        POSITION_TITLE("title"),
-        POSITION_LOCATION("location"),
-        POSITION_LOCATION_CODE("code"),
-        POSITION_JOB_TYPE("job-type"),
-        POSITION_JOB_TYPE_CODE("code"),
-        POSITION_INDUSTRY("industry"),
-        POSITION_INDUSTRY_CODE("code"),
-        POSITION_JOB_CATEGORY("job-category"),
-        POSITION_JOB_CATEGORY_CODE("code"),
-        POSITION_OPEN_QUANTITY("open-quantity"),
-        POSITION_EXPERIENCE_LEVEL("experience-level"),
-        POSITION_EXPERIENCE_LEVEL_MIN("min"),
-        POSITION_EXPERIENCE_LEVEL_MAX("max"),
-        POSITION_REQUIRED_EDUCATION_LEVEL("required-education-level"),
-        POSITION_REQUIRED_EDUCATION_LEVEL_CODE("code"),
-
-        KEYWORD("keyword"),
-        SALARY("salary"),
-        SALARY_CODE("code");
-
+        ID("id");
 
         private final String label;
         private XMLNode(String _label) {
