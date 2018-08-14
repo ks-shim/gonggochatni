@@ -1,6 +1,5 @@
 package dwayne.shim.gonggochatni.indexing;
 
-import com.lyncode.jtwig.functions.util.HtmlUtils;
 import dwayne.shim.gonggochatni.common.indexing.JobDataIndexField;
 import dwayne.shim.gonggochatni.core.keyword.KeywordExtractor;
 import lombok.extern.log4j.Log4j2;
@@ -51,6 +50,11 @@ public class IndexingExecutor {
             shortenContent(docMap, JobDataIndexField.COMPANY_NAME.label(), JobDataIndexField.COMPANY_NAME_SHORT.label(), 20);
             shortenContent(docMap, JobDataIndexField.POSITION_TITLE.label(), JobDataIndexField.POSITION_TITLE_SHORT.label(), 50);
 
+            // 3-5. shorten contents (title and overview)
+            duplicate(docMap, JobDataIndexField.POSTING_TIMESTAMP.label(), JobDataIndexField.POSTING_TIMESTAMP_SORT.label());
+            duplicate(docMap, JobDataIndexField.MODIFICATION_TIMESTAMP.label(), JobDataIndexField.MODIFICATION_TIMESTAMP_SORT.label());
+            duplicate(docMap, JobDataIndexField.EXPIRATION_TIMESTAMP.label(), JobDataIndexField.EXPIRATION_TIMESTAMP_POINT.label());
+
             if(++docCount % docSizeLimit != 0) continue;
 
             batchIndexer.index(docList);
@@ -94,6 +98,14 @@ public class IndexingExecutor {
         String content = docMap.get(sourceFieldName);
         if(content == null) return;
         if(content.length() > contentLengthLimit) content = content.substring(0, contentLengthLimit-3) + " ...";
+        docMap.put(targetFieldName, content);
+    }
+
+    private void duplicate(Map<String, String> docMap,
+                           String sourceFieldName,
+                           String targetFieldName) throws Exception {
+        String content = docMap.get(sourceFieldName);
+        if(content == null) return;
         docMap.put(targetFieldName, content);
     }
 

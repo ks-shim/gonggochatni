@@ -26,6 +26,7 @@
         <module>core</module>
         <module>crawler</module>
         <module>indexing</module>
+        <module>searching</module>
     </modules>
 
     <!-- dependencies -->

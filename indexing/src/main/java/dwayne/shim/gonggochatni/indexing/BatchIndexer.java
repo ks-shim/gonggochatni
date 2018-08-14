@@ -4,6 +4,7 @@ import dwayne.shim.gonggochatni.common.indexing.JobDataIndexField;
 import org.apache.lucene.analysis.cjk.CJKAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
+import org.apache.lucene.document.StringField;
 import org.apache.lucene.document.TextField;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
@@ -54,31 +55,17 @@ public class BatchIndexer implements Closeable {
 
     private Document mapToDocument(Map<String, String> documentMap,
                                    Document document) {
-        String latitude = null;
-        String longitude = null;
-        /*for(String key : documentMap.keySet()) {
+
+        for(String key : documentMap.keySet()) {
             String value = documentMap.get(key);
             if(value == null) continue;
 
-
             JobDataIndexField tdiField = fieldMap.get(key);
-
-            if(tdiField == JobDataIndexField.MAP_Y) latitude = value;
-            else if(tdiField == JobDataIndexField.MAP_X) longitude = value;
 
             Field field = (tdiField == null) ? new TextField(key, value, Field.Store.YES) : tdiField.buildField(value);
             document.add(field);
-        }*/
-
-        /*try {
-            if (latitude != null && longitude != null) {
-                document.add(JobDataIndexField.LAT_LON_POINT.buildField(latitude + ' ' + longitude));
-                document.add(JobDataIndexField.LAT_LON_VALUE.buildField(latitude + ' ' + longitude));
-            }
-        } catch (Exception e) {
-            System.out.println("Latitude error : " + document.toString());
         }
-*/
+
         return document;
     }
 
