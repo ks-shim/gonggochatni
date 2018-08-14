@@ -1,5 +1,9 @@
 package dwayne.shim.gonggochatni.common.indexing;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
 public enum JobDataIndexField {
 
     ID("id"),
@@ -15,10 +19,14 @@ public enum JobDataIndexField {
 
     COMPANY("company"),
     COMPANY_NAME("company-name"),
-    COMPNAY_NAME_HREF("compnay-name-href"),
+    COMPANY_NAME_SHORT("company-name-short"),
+    COMPANY_NAME_KEYWORDS("company-name-keyword"),
+    COMPANY_NAME_HREF("company-name-href"),
 
     POSITION("position"),
     POSITION_TITLE("position-title"),
+    POSITION_TITLE_SHORT("position-title-short"),
+    POSITION_TITLE_KEYWORDS("company-title-keywords"),
     POSITION_LOCATION("position-location"),
     POSITION_LOCATION_CODE("position-location-code"),
     POSITION_JOB_TYPE("position-job-type"),
@@ -44,7 +52,14 @@ public enum JobDataIndexField {
         label = _label;
     }
 
-    public String labe() {
+    public String label() {
         return label;
+    }
+
+    public static Map<String, JobDataIndexField> map() {
+        Map<String, JobDataIndexField> map = new HashMap<>();
+        for(JobDataIndexField field : values())
+            map.put(field.label, field);
+        return Collections.unmodifiableMap(map);
     }
 }

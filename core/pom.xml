@@ -20,4 +20,18 @@
         <log4j2.version>2.8.2</log4j2.version>
     </properties>
 
+    <dependencies>
+
+        <dependency>
+            <groupId>dwayne.shim.gonggochatni</groupId>
+            <artifactId>dwayne-shim-gonggochatni-common</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>dwayne.shim.korean.analyzer</groupId>
+            <artifactId>dwayne-shim-korean-analyzer-core</artifactId>
+            <version>1.0</version>
+        </dependency>
+    </dependencies>
 </project>
