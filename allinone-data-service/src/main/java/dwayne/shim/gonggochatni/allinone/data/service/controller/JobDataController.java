@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
@@ -22,10 +23,22 @@ public class JobDataController {
     private JobDataService jobDataService;
 
     @RequestMapping(value = {"/new"}, produces = "application/json; charset=utf8", method = {RequestMethod.GET})
-    public ResponseEntity<List<JobData>> getPopularLocations() {
+    public ResponseEntity<List<JobData>> getNewJobs() {
         List<JobData> result;
         try {
             result = jobDataService.getNewJobs();
+        } catch (Exception e) {
+            result = new ArrayList<>();
+        }
+
+        return new ResponseEntity(result, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = {"/search"}, produces = "application/json; charset=utf8", method = {RequestMethod.GET, RequestMethod.POST})
+    public ResponseEntity<List<JobData>> searchJobs(@RequestParam(value = "keywords", required = true) String keywords) {
+        List<JobData> result;
+        try {
+            result = jobDataService.searchJobs(keywords);
         } catch (Exception e) {
             result = new ArrayList<>();
         }

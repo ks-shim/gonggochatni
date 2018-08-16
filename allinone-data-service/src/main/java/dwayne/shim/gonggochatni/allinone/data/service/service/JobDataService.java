@@ -19,6 +19,9 @@ public class JobDataService {
     @Value("${job.new.size}")
     private int jobNewSize;
 
+    @Value("${job.search.size}")
+    private int jobSearchSize;
+
     private final SearchingExecutor searchingExecutor;
 
     private final LRUMap<Object, List<JobData>> cache;
@@ -36,6 +39,9 @@ public class JobDataService {
         return cal.getTimeInMillis();
     }
 
+    //***************************************************************************************
+    // Getting new jobs ...
+    //***************************************************************************************
     public List<JobData> getNewJobs() throws Exception {
         long key = timeKey();
         synchronized (cache) {
@@ -47,6 +53,26 @@ public class JobDataService {
             cache.put(key, oldJobDataList);
             return oldJobDataList;
         }
+    }
+
+    //***************************************************************************************
+    // Searching jobs ...
+    //***************************************************************************************
+    private final String[] fieldsToSearchForSearchingJobs = {
+            JobDataIndexField.POSITION_TITLE.label(),
+            JobDataIndexField.POSITION_TITLE_KEYWORDS.label(),
+            JobDataIndexField.POSITION_LOCATION.label(),
+            JobDataIndexField.POSITION_REQUIRED_EDUCATION_LEVEL.label(),
+            JobDataIndexField.POSITION_EXPERIENCE_LEVEL.label(),
+            JobDataIndexField.POSITION_JOB_TYPE.label(),
+            JobDataIndexField.COMPANY_NAME.label(),
+            JobDataIndexField.COMPANY_NAME_KEYWORDS.label(),
+            JobDataIndexField.KEYWORD.label(),
+            JobDataIndexField.POSITION_JOB_CATEGORY.label(),
+    };
+    public List<JobData> searchJobs(String keywords) throws Exception {
+        SearchResult result = searchingExecutor.search(null, fieldsToSearchForSearchingJobs, keywords, jobSearchSize);
+        return asJobDataList(result);
     }
 
     private List<JobData> asJobDataList(SearchResult result) {
