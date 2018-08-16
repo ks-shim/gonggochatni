@@ -5,12 +5,12 @@ import dwayne.shim.gonggochatni.common.indexing.JobDataIndexField;
 import dwayne.shim.gonggochatni.searching.SearchResult;
 import dwayne.shim.gonggochatni.searching.SearchingExecutor;
 import lombok.extern.log4j.Log4j2;
+import org.apache.commons.collections4.map.LRUMap;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.batch.BatchProperties;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Log4j2
 @Service
@@ -21,13 +21,32 @@ public class JobDataService {
 
     private final SearchingExecutor searchingExecutor;
 
+    private final LRUMap<Object, List<JobData>> cache;
+
     public JobDataService(SearchingExecutor searchingExecutor) {
         this.searchingExecutor = searchingExecutor;
+        this.cache = new LRUMap<>(2);
+    }
+
+    private long timeKey() {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(new Date());
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+        return cal.getTimeInMillis();
     }
 
     public List<JobData> getNewJobs() throws Exception {
-        SearchResult result = searchingExecutor.searchAllSorted(null, JobDataIndexField.MODIFICATION_TIMESTAMP_SORT.label(), jobNewSize);
-        return asJobDataList(result);
+        long key = timeKey();
+        synchronized (cache) {
+            List<JobData> oldJobDataList = cache.get(key);
+            if(oldJobDataList != null) return oldJobDataList;
+
+            SearchResult result = searchingExecutor.searchAllSorted(null, JobDataIndexField.MODIFICATION_TIMESTAMP_SORT.label(), jobNewSize);
+            oldJobDataList = asJobDataList(result);
+            cache.put(key, oldJobDataList);
+            return oldJobDataList;
+        }
     }
 
     private List<JobData> asJobDataList(SearchResult result) {
