@@ -127,7 +127,7 @@ public class IndexingExecutor {
 
         final String keyExtConfigLocation = "D:/korean-analyzer/configurations/main.conf";
         final String inLocation = "D:/JobData";
-        final String outLocation = "D:/JobIndexData1";
+        final String outLocation = "D:/JobDataIndex1";
         final int docSizeLimit = 10000;
 
         new IndexingExecutor(new KeywordExtractor(keyExtConfigLocation)).execute(inLocation, docSizeLimit, outLocation);

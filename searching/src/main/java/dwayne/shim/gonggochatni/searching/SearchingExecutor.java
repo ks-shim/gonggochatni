@@ -8,10 +8,8 @@ import org.apache.lucene.analysis.cjk.CJKAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.LatLonDocValuesField;
 import org.apache.lucene.document.LatLonPoint;
-import org.apache.lucene.index.IndexReader;
-import org.apache.lucene.index.IndexWriter;
-import org.apache.lucene.index.IndexWriterConfig;
-import org.apache.lucene.index.Term;
+import org.apache.lucene.document.SortedNumericDocValuesField;
+import org.apache.lucene.index.*;
 import org.apache.lucene.queryparser.classic.MultiFieldQueryParser;
 import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.*;
@@ -138,6 +136,13 @@ public class SearchingExecutor {
     // Search and get specific fields
     //******************************************************************************************************************
 
+    public SearchResult searchAllSorted(String[] fieldsToGet,
+                                        String fieldToSort,
+                                        int resultLimit) throws Exception {
+        Sort sort = new Sort(new SortedNumericSortField(fieldToSort, SortField.Type.LONG, true));
+        return search(fieldsToGet, new MatchAllDocsQuery(), sort, resultLimit);
+    }
+
     public SearchResult search(String[] fieldsToGet,
                                String[] fieldsToSearch,
                                String keywords,
@@ -191,14 +196,26 @@ public class SearchingExecutor {
 
                 result.addDocMap(docMap);
 
-                for(String fieldName : fieldsToGet)
-                    docMap.put(fieldName, doc.get(fieldName));
+                toMap(doc, fieldsToGet, docMap);
             }
         } finally {
             manager.release(searcher);
         }
 
         return result;
+    }
+
+    private void toMap(Document doc,
+                       String[] fields,
+                       Map<String, String> map) {
+
+        if(fields == null || fields.length == 0) {
+            for (IndexableField field : doc.getFields())
+                map.put(field.name(), field.stringValue());
+        } else {
+            for(String fieldName : fields)
+                map.put(fieldName, doc.get(fieldName));
+        }
     }
 
     public static void main(String[] args) throws Exception {
@@ -215,7 +232,8 @@ public class SearchingExecutor {
                 JobDataIndexField.POSITION_TITLE_KEYWORDS.label()
         };
 
-        SearchResult result = se.search(fieldsToGet.toArray(new String[fieldsToGet.size()]), fieldsToSearch, "딥러닝", 100);
+        Sort sort = new Sort(new SortedNumericSortField(JobDataIndexField.MODIFICATION_TIMESTAMP_SORT.label(), SortField.Type.LONG, true));
+        SearchResult result = se.search(null, new MatchAllDocsQuery(), sort, 100);
         System.out.println(result);
     }
 }
