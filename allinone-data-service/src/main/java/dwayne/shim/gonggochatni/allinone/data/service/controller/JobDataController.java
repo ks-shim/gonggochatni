@@ -5,10 +5,7 @@ import dwayne.shim.gonggochatni.common.data.JobData;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
@@ -44,5 +41,19 @@ public class JobDataController {
         }
 
         return new ResponseEntity(result, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = {"/detail/{jobId}"}, produces = "application/json; charset=utf8", method = {RequestMethod.GET})
+    public ResponseEntity<JobData> getJobDetail(@PathVariable(value = "jobId") String jobId,
+                                                @RequestParam(value = "userId", required = false) String userId,
+                                                @RequestParam(value = "ignoreUser", required = false, defaultValue = "false") boolean ignoreUser) {
+
+        JobData jobData = null;
+        try {
+            jobData = jobDataService.getJobDetail(jobId);
+        } catch (Exception e) {
+            jobData = JobData.dummyJobData();
+        }
+        return new ResponseEntity(jobData, HttpStatus.OK);
     }
 }

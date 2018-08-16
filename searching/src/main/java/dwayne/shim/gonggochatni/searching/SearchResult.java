@@ -37,6 +37,10 @@ public class SearchResult {
         return docMapList.get(index);
     }
 
+    public boolean isEmpty() {
+        return docMapList.size() == 0;
+    }
+
     public void clear() {
         docMapList.clear();
         docMapList = null;

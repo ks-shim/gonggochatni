@@ -75,6 +75,17 @@ public class JobDataService {
         return asJobDataList(result);
     }
 
+    //***************************************************************************************
+    // Searching jobs ...
+    //***************************************************************************************
+    private final String[] fieldsToSearchForJobDetail = {
+            JobDataIndexField.ID.label()
+    };
+    public JobData getJobDetail(String jobId) throws Exception {
+        SearchResult result = searchingExecutor.search(null, fieldsToSearchForJobDetail, jobId, 1);
+        return result.isEmpty() ? JobData.dummyJobData() : new JobData(result.mapAt(0));
+    }
+
     private List<JobData> asJobDataList(SearchResult result) {
         List<JobData> jobDataList = new ArrayList<>();
         for(Map<String, String> jobMap : result.getDocMapList()) {
