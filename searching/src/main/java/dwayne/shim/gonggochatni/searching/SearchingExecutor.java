@@ -42,7 +42,7 @@ public class SearchingExecutor {
 
         // 1. Initialize ...
         this.bufferSize = bufferSize;
-        this.analyzer = new CJKAnalyzer();
+        this.analyzer = new StandardAnalyzer();
 
         try {
             init(indexDirectoryLocation);

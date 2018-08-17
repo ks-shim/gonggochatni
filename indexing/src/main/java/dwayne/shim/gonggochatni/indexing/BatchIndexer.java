@@ -2,6 +2,7 @@ package dwayne.shim.gonggochatni.indexing;
 
 import dwayne.shim.gonggochatni.common.indexing.JobDataIndexField;
 import org.apache.lucene.analysis.cjk.CJKAnalyzer;
+import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.StringField;
@@ -29,7 +30,7 @@ public class BatchIndexer implements Closeable {
 
         try {
             Directory directory = FSDirectory.open(Paths.get(outDirectory));
-            IndexWriterConfig config = new IndexWriterConfig(new CJKAnalyzer());
+            IndexWriterConfig config = new IndexWriterConfig(new StandardAnalyzer());
 
             config.setOpenMode(IndexWriterConfig.OpenMode.CREATE);
             config.setRAMBufferSizeMB(bufferSize);

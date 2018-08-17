@@ -7,6 +7,7 @@ import dwayne.shim.gonggochatni.common.indexing.JobDataIndexField;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -100,5 +101,17 @@ public class JobDataController {
         }
 
         return new ResponseEntity(result, HttpStatus.OK);
+    }
+
+    @Scheduled(fixedRateString = "${user.keywords.ttl-check.interval}", initialDelayString = "${user.keywords.ttl-check.init-time}")
+    private void checkTTLofUserKeywords() {
+        log.info("Start checking user-keywords ttl ...");
+        try {
+            userPreferenceDataService.removeOldUserData();
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error(e.getMessage());
+        }
+        log.info("Finished checking user-keywords ttl ...");
     }
 }

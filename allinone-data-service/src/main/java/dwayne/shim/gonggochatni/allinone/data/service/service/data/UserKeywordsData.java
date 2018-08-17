@@ -41,6 +41,8 @@ public class UserKeywordsData {
         String[] newKeywords = newKeywordStr.split("\\s+");
 
         for(String keyword : newKeywords) {
+            if("&gt;".equals(keyword) || "&lt;".equals(keyword)) continue;
+
             Integer count = keywordMap.get(keyword);
             if(count == null)
                 count = 0;
