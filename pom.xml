@@ -28,6 +28,7 @@
         <module>indexing</module>
         <module>searching</module>
         <module>allinone-data-service</module>
+        <module>batch</module>
     </modules>
 
     <!-- dependencies -->
