@@ -1,7 +1,9 @@
 package dwayne.shim.gonggochatni.allinone.data.service.controller;
 
 import dwayne.shim.gonggochatni.allinone.data.service.service.JobDataService;
+import dwayne.shim.gonggochatni.allinone.data.service.service.UserPreferenceDataService;
 import dwayne.shim.gonggochatni.common.data.JobData;
+import dwayne.shim.gonggochatni.common.indexing.JobDataIndexField;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +20,9 @@ public class JobDataController {
 
     @Resource
     private JobDataService jobDataService;
+
+    @Resource
+    private UserPreferenceDataService userPreferenceDataService;
 
     @RequestMapping(value = {"/new"}, produces = "application/json; charset=utf8", method = {RequestMethod.GET})
     public ResponseEntity<List<JobData>> getNewJobs() {
@@ -43,6 +48,13 @@ public class JobDataController {
         return new ResponseEntity(result, HttpStatus.OK);
     }
 
+    private final JobDataIndexField[] fieldsForUserKeywords = {
+            JobDataIndexField.KEYWORD,
+            JobDataIndexField.POSITION_TITLE_KEYWORDS,
+            JobDataIndexField.COMPANY_NAME,
+            JobDataIndexField.POSITION_LOCATION
+    };
+
     @RequestMapping(value = {"/detail/{jobId}"}, produces = "application/json; charset=utf8", method = {RequestMethod.GET})
     public ResponseEntity<JobData> getJobDetail(@PathVariable(value = "jobId") String jobId,
                                                 @RequestParam(value = "userId", required = false) String userId,
@@ -50,7 +62,11 @@ public class JobDataController {
 
         JobData jobData = null;
         try {
+            // 1. get job detail data ...
             jobData = jobDataService.getJobDetail(jobId);
+
+            // 2. register user-keywords info ...
+            if(userId != null && !ignoreUser) userPreferenceDataService.addUserKeywords(userId, jobData.getInfoMap(), fieldsForUserKeywords);
         } catch (Exception e) {
             jobData = JobData.dummyJobData();
         }

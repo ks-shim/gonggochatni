@@ -46,11 +46,11 @@ public class IndexingExecutor {
             extractKeywords(docMap, JobDataIndexField.COMPANY_NAME.label(), JobDataIndexField.COMPANY_NAME_KEYWORDS.label());
             extractKeywords(docMap, JobDataIndexField.POSITION_TITLE.label(), JobDataIndexField.POSITION_TITLE_KEYWORDS.label());
 
-            // 3-4. shorten contents (title and overview)
+            // 3-4. shorten contents
             shortenContent(docMap, JobDataIndexField.COMPANY_NAME.label(), JobDataIndexField.COMPANY_NAME_SHORT.label(), 20);
             shortenContent(docMap, JobDataIndexField.POSITION_TITLE.label(), JobDataIndexField.POSITION_TITLE_SHORT.label(), 50);
 
-            // 3-5. shorten contents (title and overview)
+            // 3-5. duplicate fields
             duplicate(docMap, JobDataIndexField.POSTING_TIMESTAMP.label(), JobDataIndexField.POSTING_TIMESTAMP_SORT.label());
             duplicate(docMap, JobDataIndexField.MODIFICATION_TIMESTAMP.label(), JobDataIndexField.MODIFICATION_TIMESTAMP_SORT.label());
             duplicate(docMap, JobDataIndexField.EXPIRATION_TIMESTAMP.label(), JobDataIndexField.EXPIRATION_TIMESTAMP_POINT.label());

@@ -5,6 +5,7 @@ import dwayne.shim.gonggochatni.common.searching.LuceneResultField;
 import lombok.extern.log4j.Log4j2;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.cjk.CJKAnalyzer;
+import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.LatLonDocValuesField;
 import org.apache.lucene.document.LatLonPoint;
