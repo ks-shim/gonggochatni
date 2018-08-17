@@ -147,9 +147,21 @@ public class SearchingExecutor {
     public SearchResult search(String[] fieldsToGet,
                                String[] fieldsToSearch,
                                String keywords,
-                               int resultLimt) throws Exception {
+                               int resultLimit) throws Exception {
 
-        return search(fieldsToGet, buildBoolQuery(fieldsToSearch, keywords).build(), resultLimt);
+        return search(fieldsToGet, buildBoolQuery(fieldsToSearch, keywords).build(), resultLimit);
+    }
+
+    public SearchResult searchSimilar(String[] fieldsToGet,
+                                       String[] fieldsToSearch,
+                                       String keywords,
+                                       String exclusiveId,
+                                       int resultLimit) throws Exception {
+
+        TermQuery excQuery = new TermQuery(new Term(JobDataIndexField.ID.label(), exclusiveId));
+        BooleanQuery.Builder builder = buildBoolQuery(fieldsToSearch, keywords);
+        builder.add(excQuery, BooleanClause.Occur.MUST_NOT);
+        return search(fieldsToGet, builder.build(), resultLimit);
     }
 
     public SearchResult search(String[] fieldsToGet,

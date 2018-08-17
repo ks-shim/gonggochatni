@@ -72,4 +72,33 @@ public class JobDataController {
         }
         return new ResponseEntity(jobData, HttpStatus.OK);
     }
+
+    @RequestMapping(value = {"/interest/{userId}"}, produces = "application/json; charset=utf8", method = {RequestMethod.GET})
+    public ResponseEntity<List<JobData>> getInterestingJobs(@PathVariable(value = "userId") String userId) {
+
+        List<JobData> result;
+        try {
+            String userKeywords = userPreferenceDataService.getUserKeywords(userId);
+            if(userKeywords == null) throw new NullPointerException();
+
+            result = jobDataService.interestingLocations(userKeywords);
+        } catch (Exception e) {
+            result = new ArrayList<>();
+        }
+
+        return new ResponseEntity(result, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = {"/similar/{jobId}"}, produces = "application/json; charset=utf8", method = {RequestMethod.GET})
+    public ResponseEntity<List<JobData>> getSimilarJobs(@PathVariable(value = "jobId") String jobId) {
+
+        List<JobData> result;
+        try {
+            result = jobDataService.getSimilarJobs(jobId);
+        } catch (Exception e) {
+            result = new ArrayList<>();
+        }
+
+        return new ResponseEntity(result, HttpStatus.OK);
+    }
 }

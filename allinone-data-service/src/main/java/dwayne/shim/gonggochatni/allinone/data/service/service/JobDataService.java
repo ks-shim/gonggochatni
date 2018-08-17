@@ -22,6 +22,9 @@ public class JobDataService {
     @Value("${job.search.size}")
     private int jobSearchSize;
 
+    @Value("${job.similar.size}")
+    private int jobSimilarSize;
+
     private final SearchingExecutor searchingExecutor;
 
     private final LRUMap<Object, List<JobData>> cache;
@@ -72,6 +75,57 @@ public class JobDataService {
     };
     public List<JobData> searchJobs(String keywords) throws Exception {
         SearchResult result = searchingExecutor.search(null, fieldsToSearchForSearchingJobs, keywords, jobSearchSize);
+        return asJobDataList(result);
+    }
+
+    //***************************************************************************************
+    // Interesting jobs ...
+    //***************************************************************************************
+    public List<JobData> interestingLocations(String keywords) throws Exception {
+        return searchJobs(keywords);
+    }
+
+
+    //***************************************************************************************
+    // similar jobs ...
+    //***************************************************************************************
+    private final String[] fieldToSearchForSimilarJobs1 = {JobDataIndexField.ID.label()};
+    private final String[] fieldToGetForSimilarJobs1 = {
+            JobDataIndexField.POSITION_TITLE_KEYWORDS.label(),
+            JobDataIndexField.POSITION_TITLE.label(),
+            JobDataIndexField.COMPANY_NAME.label(),
+            JobDataIndexField.POSITION_JOB_CATEGORY.label(),
+            JobDataIndexField.KEYWORD.label()
+    };
+    private final String[] fieldToSearchForSimilarJobs2 = {
+            JobDataIndexField.POSITION_TITLE_KEYWORDS.label(),
+            JobDataIndexField.POSITION_TITLE.label(),
+            JobDataIndexField.COMPANY_NAME.label(),
+            JobDataIndexField.POSITION_JOB_CATEGORY.label(),
+            JobDataIndexField.KEYWORD.label()
+    };
+    public List<JobData> getSimilarJobs(String jobId) throws Exception {
+        // 1. get keywords data of the job ...
+        SearchResult result = searchingExecutor.search(
+                fieldToGetForSimilarJobs1,
+                fieldToSearchForSimilarJobs1,
+                jobId,
+                1);
+
+        // 2. make keywords string ...
+        Map<String, String> docMap = result.mapAt(0);
+        StringBuilder sb = new StringBuilder();
+        for(String keywordStr : docMap.values())
+            sb.append(keywordStr).append(' ');
+        String keywords = sb.toString().trim();
+
+        result = searchingExecutor.searchSimilar(
+                null,
+                fieldToSearchForSimilarJobs2,
+                keywords,
+                jobId,
+                jobSimilarSize);
+
         return asJobDataList(result);
     }
 
