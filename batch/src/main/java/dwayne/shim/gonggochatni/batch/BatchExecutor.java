@@ -4,6 +4,7 @@ import dwayne.shim.gonggochatni.core.keyword.KeywordExtractor;
 import dwayne.shim.gonggochatni.crawler.JobCrawler;
 import dwayne.shim.gonggochatni.crawler.apicaller.ApiCaller;
 import dwayne.shim.gonggochatni.crawler.apicaller.DefaultApiCaller;
+import dwayne.shim.gonggochatni.indexing.DocProcessing;
 import dwayne.shim.gonggochatni.indexing.IndexingExecutor;
 import org.apache.commons.lang3.StringUtils;
 
@@ -77,8 +78,12 @@ public class BatchExecutor {
     }
 
 
-    public void executeIncrementalSteps(Properties prop) throws Exception {
+    public void executeIncrementalStep(Properties prop) throws Exception {
+        String url = prop.getProperty("index.rest.incremental");
         int hoursBefore = Integer.parseInt(prop.getProperty("crawl.hours.before"));
+        String keyExtractorConfigPath = prop.getProperty("key-extractor.config.path");
+        JobCrawler crawler = new JobCrawler();
+        crawler.executeIncremental(url, hoursBefore, new DocProcessing(new KeywordExtractor(keyExtractorConfigPath)));
     }
 
     public static void main(String[] args) throws Exception {
@@ -102,6 +107,6 @@ public class BatchExecutor {
 
         BatchExecutor executor = new BatchExecutor();
         if(isBatch) executor.executeBatchSteps(prop);
-        else executor.executeIncrementalSteps(prop);
+        else executor.executeIncrementalStep(prop);
     }
 }

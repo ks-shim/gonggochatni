@@ -66,7 +66,7 @@ public class JobCrawler {
                 Map<String, String> oldDocMap = objectMapper.readValue(oldFile, Map.class);
                 if (oldDocMap == null) continue;
                 String expiration = oldDocMap.get(JobDataIndexField.EXPIRATION_TIMESTAMP.label());
-                if(Long.parseLong(expiration) > System.currentTimeMillis()) continue;
+                if(Long.parseLong(expiration) > (System.currentTimeMillis()/1000)) continue;
             } catch (Exception e) {
                 continue;
             }
