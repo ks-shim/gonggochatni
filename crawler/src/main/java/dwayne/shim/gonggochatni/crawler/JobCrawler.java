@@ -58,19 +58,29 @@ public class JobCrawler {
 
         // 1. init
         log.info("Initiating ...");
+        ObjectMapper objectMapper = new ObjectMapper();
         outDir.mkdirs();
-        /*File[] oldFiles = outDir.listFiles();
+        File[] oldFiles = outDir.listFiles();
         for(File oldFile : oldFiles) {
+            try {
+                Map<String, String> oldDocMap = objectMapper.readValue(oldFile, Map.class);
+                if (oldDocMap == null) continue;
+                String expiration = oldDocMap.get(JobDataIndexField.EXPIRATION_TIMESTAMP.label());
+                if(Long.parseLong(expiration) > System.currentTimeMillis()) continue;
+            } catch (Exception e) {
+                continue;
+            }
+
             FileDeleteStrategy.FORCE.delete(oldFile);
             log.info("Deleted " + oldFile.getName());
-        }*/
+        }
 
         // 2. xml parser
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 
         // 3. etc
-        ObjectMapper objectMapper = new ObjectMapper();
+
         Map<ParameterKey, String> parameters = new HashMap<>();
 
         // 4. api info
