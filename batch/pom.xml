@@ -11,5 +11,40 @@
 
     <artifactId>dwayne-shim-gonggochatni-batch</artifactId>
 
+    <dependencies>
+        <dependency>
+            <groupId>dwayne.shim.gonggochatni</groupId>
+            <artifactId>dwayne-shim-gonggochatni-common</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
 
+        <dependency>
+            <groupId>dwayne.shim.gonggochatni</groupId>
+            <artifactId>dwayne-shim-gonggochatni-crawler</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>dwayne.shim.gonggochatni</groupId>
+            <artifactId>dwayne-shim-gonggochatni-indexing</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <mainClass>dwayne.shim.geogigani.batch.BatchExecutor</mainClass>
+                        </manifest>
+                    </archive>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>
