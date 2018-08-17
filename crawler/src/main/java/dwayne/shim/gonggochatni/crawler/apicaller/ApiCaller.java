@@ -10,4 +10,6 @@ public interface ApiCaller extends Closeable {
     String callAsPut(String url) throws Exception;
 
     String callAsPost(String url, Map<String, String> params) throws Exception;
+
+    String callAsPost(String url, String body) throws Exception;
 }

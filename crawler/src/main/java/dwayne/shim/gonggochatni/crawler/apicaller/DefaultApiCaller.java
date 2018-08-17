@@ -9,6 +9,7 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
@@ -100,6 +101,32 @@ public class DefaultApiCaller implements ApiCaller {
         }
     }
 
+    @Override
+    public String callAsPost(String url, String body) throws Exception {
+        if (url == null || url.trim().length() == 0)
+            throw new IllegalArgumentException("The parameter <url> is needed.");
+
+        // Response handler doing not much ...
+        ResponseHandler<String> responseHandler = new ResponseHandler<String>() {
+            @Override
+            public String handleResponse(HttpResponse httpResponse) throws ClientProtocolException, IOException {
+                int status = httpResponse.getStatusLine().getStatusCode();
+                if(status < 200 || status >= 300)
+                    return "ERROR";
+                return EntityUtils.toString(httpResponse.getEntity());
+            }
+        };
+
+        try {
+            HttpPost httpPost = new HttpPost(url);
+            addBody(httpPost, body);
+            String responseBody = httpClient.execute(httpPost, responseHandler);
+            return responseBody;
+        } finally {
+
+        }
+    }
+
     private void addBody(HttpPost httpPost, Map<String, String> params) throws UnsupportedEncodingException {
         final String encoding = "UTF-8";
         if(params == null || params.size() == 0) return;
@@ -107,7 +134,17 @@ public class DefaultApiCaller implements ApiCaller {
         List<NameValuePair> body = new ArrayList<>();
         for(String key : params.keySet())
             body.add(new BasicNameValuePair(key, URLEncoder.encode(params.get(key), encoding)));
+        httpPost.setHeader("Content-type", "application/json");
         httpPost.setEntity(new UrlEncodedFormEntity(body));
+    }
+
+    private void addBody(HttpPost httpPost, String body) throws UnsupportedEncodingException {
+        final String encoding = "UTF-8";
+        if(body == null || body.isEmpty()) return;
+
+        httpPost.setHeader("Accept", "application/json");
+        httpPost.setHeader("Content-type", "application/json");
+        httpPost.setEntity(new StringEntity(body, encoding));
     }
 
 }

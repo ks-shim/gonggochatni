@@ -2,15 +2,23 @@ package dwayne.shim.gonggochatni.allinone.data.service.controller;
 
 import dwayne.shim.gonggochatni.allinone.data.service.service.JobDataService;
 import dwayne.shim.gonggochatni.allinone.data.service.util.IndexPathUtil;
+import dwayne.shim.gonggochatni.common.indexing.JobDataIndexField;
 import dwayne.shim.gonggochatni.searching.SearchingExecutor;
 import lombok.extern.log4j.Log4j2;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.MediaType;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 @Log4j2
 @RestController
@@ -55,5 +63,10 @@ public class IndexController {
         } catch (Exception e) {
             log.error(e);
         }
+    }
+
+    @RequestMapping(value = {"/do-incremental-indexing"}, produces = "application/json; charset=utf8", method = {RequestMethod.POST})
+    public void doIncrementalResumeIndexing(@RequestBody List<Map<String, String>> docList) throws Exception {
+        searchingExecutor.updateDocuments(docList, JobDataIndexField.ID.label());
     }
 }

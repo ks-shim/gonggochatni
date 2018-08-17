@@ -6,10 +6,7 @@ import lombok.extern.log4j.Log4j2;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.cjk.CJKAnalyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
-import org.apache.lucene.document.Document;
-import org.apache.lucene.document.LatLonDocValuesField;
-import org.apache.lucene.document.LatLonPoint;
-import org.apache.lucene.document.SortedNumericDocValuesField;
+import org.apache.lucene.document.*;
 import org.apache.lucene.index.*;
 import org.apache.lucene.queryparser.classic.MultiFieldQueryParser;
 import org.apache.lucene.queryparser.classic.QueryParser;
@@ -72,6 +69,63 @@ public class SearchingExecutor {
         manager = new SearcherManager(indexWriter, new SearcherFactory());
     }
 
+    //******************************************************************************************************************
+    // 1. Indexing related things ...
+    //******************************************************************************************************************
+    public void addDocuments(List<Map<String, String>> documentsMap) throws Exception {
+        synchronized (indexWriterLock) {
+            List<Document> docList = new ArrayList<Document>();
+            for (Map<String, String> documentMap : documentsMap) {
+                Document doc = mapToDocument(documentMap, new Document());
+                docList.add(doc);
+            }
+
+            indexWriter.addDocuments(docList);
+            indexWriter.commit();
+        }
+    }
+
+    public void updateDocuments(List<Map<String, String>> documentsMap, String idField) throws Exception {
+        synchronized (indexWriterLock) {
+            for (Map<String, String> documentMap : documentsMap) {
+                String idValue = documentMap.get(idField);
+                if (idValue == null || "".equals(idValue)) continue;
+
+                Document doc = mapToDocument(documentMap, new Document());
+                indexWriter.updateDocument(new Term(idField, idValue), doc);
+            }
+            indexWriter.commit();
+        }
+    }
+
+    public void deleteDocuments(List<Map<String, String>> documentsMap, String idField) throws Exception {
+        synchronized (indexWriterLock) {
+            for (Map<String, String> documentMap : documentsMap) {
+                String idValue = documentMap.get(idField);
+                if (idValue == null || "".equals(idValue)) continue;
+
+                indexWriter.deleteDocuments(new Term(idField, idValue));
+            }
+
+            indexWriter.commit();
+        }
+    }
+
+    private final Map<String, JobDataIndexField> indexFieldTypeMap = JobDataIndexField.map();
+    private Document mapToDocument(Map<String, String> documentMap, Document document) {
+        Iterator<String> keyIter = documentMap.keySet().iterator();
+        while(keyIter.hasNext()) {
+            String key = keyIter.next();
+            if(key == null) continue;
+
+            String value = documentMap.get(key);
+            JobDataIndexField indexFieldType = indexFieldTypeMap.get(key);
+            Field field = (indexFieldType == null) ? new TextField(key, value, Field.Store.YES) : indexFieldType.buildField(value);
+            document.add(field);
+        }
+
+        return document;
+    }
 
     //******************************************************************************************************************
     // Etc

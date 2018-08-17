@@ -1,7 +1,11 @@
 package dwayne.shim.gonggochatni.crawler;
 
+import dwayne.shim.gonggochatni.common.indexing.JobDataIndexField;
+import dwayne.shim.gonggochatni.core.keyword.KeywordExtractor;
 import dwayne.shim.gonggochatni.crawler.apicaller.ApiCaller;
 import dwayne.shim.gonggochatni.crawler.apicaller.DefaultApiCaller;
+import dwayne.shim.gonggochatni.crawler.util.TimeUtil;
+import dwayne.shim.gonggochatni.indexing.DocProcessing;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.FileDeleteStrategy;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -11,17 +15,18 @@ import org.xml.sax.InputSource;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
+import java.io.IOException;
 import java.io.StringReader;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.net.URLEncoder;
+import java.util.*;
 
 @Log4j2
 public class JobCrawler {
 
     enum ParameterKey {
         START("start"),
-        COUNT("count");
+        COUNT("count"),
+        UPDATED_MIN("updated_min");
 
         private final String label;
         private ParameterKey(String _label) {
@@ -48,16 +53,17 @@ public class JobCrawler {
         }
     }
 
-    public void execute(File outDir) throws Exception {
+    public void execute(File outDir,
+                        int daysBefore) throws Exception {
 
         // 1. init
         log.info("Initiating ...");
         outDir.mkdirs();
-        File[] oldFiles = outDir.listFiles();
+        /*File[] oldFiles = outDir.listFiles();
         for(File oldFile : oldFiles) {
             FileDeleteStrategy.FORCE.delete(oldFile);
             log.info("Deleted " + oldFile.getName());
-        }
+        }*/
 
         // 2. xml parser
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
@@ -75,10 +81,59 @@ public class JobCrawler {
         int pageNo = 0;
         try (ApiCaller apiCaller = new DefaultApiCaller()) {
             while (true) {
-                keepCrawling = readJobData(jobDataMap, apiCaller, apiInfo, parameters, pageNo++, dBuilder);
+                keepCrawling = readJobData(jobDataMap, apiCaller, apiInfo, parameters, pageNo++, TimeUtil.getTimestampDaysBefore(daysBefore), dBuilder);
                 if(!keepCrawling) break;
 
                 writeToFile(jobDataMap, objectMapper, outDir);
+
+                jobDataMap.clear();
+            }
+        }
+    }
+
+    public void executeIncremental(String url,
+                                   int hoursBefore,
+                                   DocProcessing docProcessing) throws Exception {
+
+        // 1. xml parser
+        DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+
+        // 2. etc
+        ObjectMapper objectMapper = new ObjectMapper();
+        Map<ParameterKey, String> parameters = new HashMap<>();
+
+        // 3. api info
+        RestApiInfo apiInfo = buildJobApiInfo();
+
+        Map<String, Map<String, String>> jobDataMap = new HashMap<>();
+        boolean keepCrawling = true;
+        int pageNo = 0;
+        try (ApiCaller apiCaller = new DefaultApiCaller()) {
+            while (true) {
+                keepCrawling = readJobData(jobDataMap, apiCaller, apiInfo, parameters, pageNo++, URLEncoder.encode(TimeUtil.getTimestampHoursBefore(hoursBefore), "UTF-8"), dBuilder);
+                if(!keepCrawling) break;
+
+                for(Map<String, String> docMap : jobDataMap.values()) {
+                    // 3-1. replace http to https ...
+                    docProcessing.replaceHttpToHttps(docMap, JobDataIndexField.URL.label());
+                    docProcessing.replaceHttpToHttps(docMap, JobDataIndexField.COMPANY_NAME_HREF.label());
+
+                    // 3-3. extract keywords and put it into docMap as new fields
+                    docProcessing.extractKeywords(docMap, JobDataIndexField.COMPANY_NAME.label(), JobDataIndexField.COMPANY_NAME_KEYWORDS.label());
+                    docProcessing.extractKeywords(docMap, JobDataIndexField.POSITION_TITLE.label(), JobDataIndexField.POSITION_TITLE_KEYWORDS.label());
+
+                    // 3-4. shorten contents
+                    docProcessing.shortenContent(docMap, JobDataIndexField.COMPANY_NAME.label(), JobDataIndexField.COMPANY_NAME_SHORT.label(), 20);
+                    docProcessing.shortenContent(docMap, JobDataIndexField.POSITION_TITLE.label(), JobDataIndexField.POSITION_TITLE_SHORT.label(), 50);
+
+                    // 3-5. duplicate fields
+                    docProcessing.duplicate(docMap, JobDataIndexField.POSTING_TIMESTAMP.label(), JobDataIndexField.POSTING_TIMESTAMP_SORT.label());
+                    docProcessing.duplicate(docMap, JobDataIndexField.MODIFICATION_TIMESTAMP.label(), JobDataIndexField.MODIFICATION_TIMESTAMP_SORT.label());
+                    docProcessing.duplicate(docMap, JobDataIndexField.EXPIRATION_TIMESTAMP.label(), JobDataIndexField.EXPIRATION_TIMESTAMP_POINT.label());
+                }
+
+                callApi(url, objectMapper, new ArrayList<>(jobDataMap.values()));
 
                 jobDataMap.clear();
             }
@@ -90,9 +145,11 @@ public class JobCrawler {
                                 RestApiInfo apiInfo,
                                 Map<ParameterKey, String> parameters,
                                 int pageNo,
+                                String dateTime,
                                 DocumentBuilder dBuilder) throws Exception {
         parameters.clear();
         parameters.put(ParameterKey.START, String.valueOf(pageNo));
+        parameters.put(ParameterKey.UPDATED_MIN, dateTime);
         String url = apiInfo.asUrlStringWith(parameters);
         log.info(url);
         String xml = apiCaller.callAsGet(url);
@@ -181,6 +238,15 @@ public class JobCrawler {
         }
     }
 
+    private void callApi(String url,
+                         ObjectMapper mapper,
+                         List<Map<String, String>> jobDocList) throws Exception {
+        try (ApiCaller caller = new DefaultApiCaller()){
+            String json = mapper.writeValueAsString(jobDocList);
+            caller.callAsPost(url, json);
+        }
+    }
+
     private RestApiInfo buildJobApiInfo() {
 
         // make area-based-list restapi info ...
@@ -195,7 +261,12 @@ public class JobCrawler {
     }
 
     public static void main(String[] args) throws Exception {
-        new JobCrawler().execute(new File("D:/JobData"));
+        //new JobCrawler().execute(new File("D:/JobData"), 3);
+
+        final String url = "http://localhost:3593/index/do-incremental-indexing";
+        final String keyExtConfigLocation = "D:/korean-analyzer/configurations/main.conf";
+        DocProcessing dp = new DocProcessing(new KeywordExtractor(keyExtConfigLocation));
+        new JobCrawler().executeIncremental(url, 1, dp);
     }
 
     private static class RestApiInfo {

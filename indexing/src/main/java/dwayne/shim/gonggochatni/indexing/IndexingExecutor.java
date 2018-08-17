@@ -11,9 +11,9 @@ import java.util.*;
 @Log4j2
 public class IndexingExecutor {
 
-    private final KeywordExtractor keywordExtractor;
+    private final DocProcessing docProcessing;
     public IndexingExecutor(KeywordExtractor keywordExtractor) {
-        this.keywordExtractor = keywordExtractor;
+        this.docProcessing = new DocProcessing(keywordExtractor);
     }
 
     public void execute(String inDirLocation,
@@ -39,21 +39,21 @@ public class IndexingExecutor {
             ++allowedDocCount;
 
             // 3-1. replace http to https ...
-            replaceHttpToHttps(docMap, JobDataIndexField.URL.label());
-            replaceHttpToHttps(docMap, JobDataIndexField.COMPANY_NAME_HREF.label());
+            docProcessing.replaceHttpToHttps(docMap, JobDataIndexField.URL.label());
+            docProcessing.replaceHttpToHttps(docMap, JobDataIndexField.COMPANY_NAME_HREF.label());
 
             // 3-3. extract keywords and put it into docMap as new fields
-            extractKeywords(docMap, JobDataIndexField.COMPANY_NAME.label(), JobDataIndexField.COMPANY_NAME_KEYWORDS.label());
-            extractKeywords(docMap, JobDataIndexField.POSITION_TITLE.label(), JobDataIndexField.POSITION_TITLE_KEYWORDS.label());
+            docProcessing.extractKeywords(docMap, JobDataIndexField.COMPANY_NAME.label(), JobDataIndexField.COMPANY_NAME_KEYWORDS.label());
+            docProcessing.extractKeywords(docMap, JobDataIndexField.POSITION_TITLE.label(), JobDataIndexField.POSITION_TITLE_KEYWORDS.label());
 
             // 3-4. shorten contents
-            shortenContent(docMap, JobDataIndexField.COMPANY_NAME.label(), JobDataIndexField.COMPANY_NAME_SHORT.label(), 20);
-            shortenContent(docMap, JobDataIndexField.POSITION_TITLE.label(), JobDataIndexField.POSITION_TITLE_SHORT.label(), 50);
+            docProcessing.shortenContent(docMap, JobDataIndexField.COMPANY_NAME.label(), JobDataIndexField.COMPANY_NAME_SHORT.label(), 20);
+            docProcessing.shortenContent(docMap, JobDataIndexField.POSITION_TITLE.label(), JobDataIndexField.POSITION_TITLE_SHORT.label(), 50);
 
             // 3-5. duplicate fields
-            duplicate(docMap, JobDataIndexField.POSTING_TIMESTAMP.label(), JobDataIndexField.POSTING_TIMESTAMP_SORT.label());
-            duplicate(docMap, JobDataIndexField.MODIFICATION_TIMESTAMP.label(), JobDataIndexField.MODIFICATION_TIMESTAMP_SORT.label());
-            duplicate(docMap, JobDataIndexField.EXPIRATION_TIMESTAMP.label(), JobDataIndexField.EXPIRATION_TIMESTAMP_POINT.label());
+            docProcessing.duplicate(docMap, JobDataIndexField.POSTING_TIMESTAMP.label(), JobDataIndexField.POSTING_TIMESTAMP_SORT.label());
+            docProcessing.duplicate(docMap, JobDataIndexField.MODIFICATION_TIMESTAMP.label(), JobDataIndexField.MODIFICATION_TIMESTAMP_SORT.label());
+            docProcessing.duplicate(docMap, JobDataIndexField.EXPIRATION_TIMESTAMP.label(), JobDataIndexField.EXPIRATION_TIMESTAMP_POINT.label());
 
             if(++docCount % docSizeLimit != 0) continue;
 
@@ -74,54 +74,7 @@ public class IndexingExecutor {
         batchIndexer.close();
     }
 
-    private void replaceHttpToHttps(Map<String, String> docMap,
-                                    String fieldName) throws Exception {
-        String content = docMap.get(fieldName);
-        if(content == null) return;
 
-        content = content.replaceAll("http:", "https:");
-        docMap.put(fieldName, content);
-    }
-
-    private void extractKeywords(Map<String, String> docMap,
-                                 String sourceFieldName,
-                                 String targetFieldName) throws Exception {
-        String content = docMap.get(sourceFieldName);
-        if(content == null) return;
-        docMap.put(targetFieldName, extractKeywords(content));
-    }
-
-    private void shortenContent(Map<String, String> docMap,
-                                String sourceFieldName,
-                                String targetFieldName,
-                                int contentLengthLimit) throws Exception {
-        String content = docMap.get(sourceFieldName);
-        if(content == null) return;
-        if(content.length() > contentLengthLimit) content = content.substring(0, contentLengthLimit-3) + " ...";
-        docMap.put(targetFieldName, content);
-    }
-
-    private void duplicate(Map<String, String> docMap,
-                           String sourceFieldName,
-                           String targetFieldName) throws Exception {
-        String content = docMap.get(sourceFieldName);
-        if(content == null) return;
-        docMap.put(targetFieldName, content);
-    }
-
-    private String extractKeywords(String content) {
-        if(content == null) return "";
-        List<String> keywords = keywordExtractor.extract(content);
-        return asString(keywords);
-    }
-
-    private String asString(List<String> keywords) {
-        StringBuilder sb = new StringBuilder();
-        for(String keyword : keywords)
-            sb.append(keyword).append(' ');
-
-        return sb.toString().trim();
-    }
 
     public static void main(String[] args) throws Exception {
 
