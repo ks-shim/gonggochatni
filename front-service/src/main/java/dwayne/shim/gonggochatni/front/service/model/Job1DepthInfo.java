@@ -14,6 +14,7 @@ public class Job1DepthInfo {
     private List<Map<String, String>> jobMapList;
     private int totalSize;
 
+    public Job1DepthInfo() {}
     public Job1DepthInfo(String key,
                          int seq) {
         this.key = key;

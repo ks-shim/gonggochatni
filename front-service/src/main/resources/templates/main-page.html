@@ -8,7 +8,7 @@
     <meta name="description" content=""/>
     <meta name="author" content=""/>
 
-    <title>거기가니?</title>
+    <title>공고찾니?</title>
 
     <!-- Bootstrap core CSS -->
     <link th:href="@{/vendor/bootstrap/css/bootstrap.min.css}" rel="stylesheet"/>
@@ -79,7 +79,7 @@
     <nav class="navbar navbar-expand-lg navbar-dark fixed-top" id="mainNav">
       <div class="container">
         <div class="logo">
-          <a th:href="@{/popular-destinations}"><img th:src="${'/img/logos/geogigani_icon_48x48.png'}" title="geogigani"></a>
+          <a th:href="@{/main}"><img th:src="${'/img/logos/gonggochatni_icon_48x48.png'}" title="gonggochatni"></a>
         </div>
         <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
           Menu
@@ -87,23 +87,17 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarResponsive">
           <ul class="navbar-nav text-uppercase ml-auto">
-            <th:li  th:if="${destination_interest_info != null}" class="nav-item">
-              <a class="nav-link js-scroll-trigger" href="#portfolio2" style="font-family: 'Jeju Hallasan', serif;"><i class="fa fa-user fa-fw"></i>맞춤여행지</a>
+            <th:li  th:if="${job_interest_info != null}" class="nav-item">
+              <a class="nav-link js-scroll-trigger" href="#portfolio2" style="font-family: 'Jeju Hallasan', serif;"><i class="fa fa-user fa-fw"></i>맞춤공고</a>
             </th:li>
             <li class="nav-item">
-              <a class="nav-link js-scroll-trigger" href="#portfolio" style="font-family: 'Jeju Hallasan', serif;"><i class="fa fa-group fa-fw"></i>인기여행지</a>
+              <a class="nav-link js-scroll-trigger" href="#portfolio" style="font-family: 'Jeju Hallasan', serif;"><i class="fa fa-group fa-fw"></i>새로운공고</a>
             </li>
             <li class="nav-item">
               <a class="nav-link js-scroll-trigger" href="#about" style="font-family: 'Jeju Hallasan', serif;"><i class="fa fa-file-text-o fa-fw"></i>About</a>
             </li>
             <li class="nav-item">
               <a class="nav-link js-scroll-trigger" href="#team" style="font-family: 'Jeju Hallasan', serif;"><i class="fa fa-envelope-o fa-fw"></i>Helper</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" th:href="'javascript:getLocation()'" style="font-family: 'Jeju Hallasan', serif;"><i class="fa fa-bullseye fa-fw"></i>내근처여행지</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" th:href="@{/dust-info}" style="font-family: 'Jeju Hallasan', serif;"><i class="fa fa-cloud fa-fw"></i>미세먼지예보</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" th:href="@{/statistics}" style="font-family: 'Jeju Hallasan', serif;"><i class="fa fa-bar-chart-o fa-fw"></i>통계</a>
@@ -124,7 +118,7 @@
           <ul class="navbar-nav text-uppercase ml-auto">
             <li class="nav-item">
               <div class="nav-link col-md-12 col-lg-12 col-xl-12 mx-auto">
-                <form id="search_form" role="form" th:action="@{/search-destinations}" method="get">
+                <form id="search_form" role="form" th:action="@{/search-jobs}" method="get">
                   <div class="form-group">
                     <div class="input-group">
                       <input id="keywords" name="keywords" style="border-color: #555555;opacity: .85;font-family: 'Jeju Hallasan', serif;" type="text" class="form-control" placeholder="검색어를 입력하세요..." th:onkeypress="'javascript:if(event.keyCode==13) {search(); return false;}'"/>
@@ -147,9 +141,9 @@
     <header class="masthead">
       <div class="container">
         <div class="intro-text">
-          <div class="intro-lead-in">Destination Search and Share</div>
-          <div class="intro-heading text-uppercase" style="font-family: 'cwTeXHei', 'Jeju Hallasan', serif;">거기가니?</div>
-          <form id="search_form_header" role="form" th:action="@{/search-destinations}" method="get">
+          <div class="intro-lead-in" style="font-family: 'cwTeXHei', 'Jeju Hallasan', serif;">일자리 추천/검색 서비스</div>
+          <div class="intro-heading text-uppercase" style="font-family: 'cwTeXHei', 'Jeju Hallasan', serif;">공고찾니?</div>
+          <form id="search_form_header" role="form" th:action="@{/search-jobs}" method="get">
             <div class="form-group">
               <div class="input-group" s>
                 <input id="keywords-header" name="keywords" style="border-color: #555555;opacity: .75;font-family: 'Jeju Hallasan', serif;" type="text" class="form-control" placeholder="" th:onkeypress="'javascript:if(event.keyCode==13) {search_header(); return false;}'"/>
@@ -166,7 +160,7 @@
     </header>
 
     <!-- Interest -->
-    <th:block th:if="${destination_interest_info != null}">
+    <th:block th:if="${job_interest_info != null}">
     <section class="bg-light" id="portfolio2" style="padding: 50px 0;">
       <div class="container">
         <div class="row">
@@ -177,12 +171,12 @@
                 <i class="fa fa-user fa-stack-1x fa-inverse"></i>
               </span>
             </h6>
-            <h3 class="section-subheading text-muted" style="margin-bottom: 30px;font-family: 'cwTeXHei', 'Jeju Hallasan', serif;">맞춤 여행지</h3>
+            <h3 class="section-subheading text-muted" style="margin-bottom: 30px;font-family: 'cwTeXHei', 'Jeju Hallasan', serif;">맞춤 공고</h3>
             <!--<tenping class="adsbytenping" style="width: 100%; margin: 0px auto; display: block; max-width: 580px;" tenping-ad-client="ULkZYhHDonqxNgJx%2bd2t5XgWCcx0QUdnsdGDbY1yMIshP4q34efQL0ddArqjWnF3" tenping-ad-display-type="UD8Mia8gyIoT5Z2MT6VB3Q%3d%3d"></tenping><script async src='//ads.tenping.kr/scripts/adsbytenping.min.js' ></script>-->
             <div>
-              <th:block th:if="${destination_interest_info != null}">
+              <th:block th:if="${job_interest_info != null}">
                 <ul class="nav nav-tabs">
-                  <li th:each="category,iterStat : ${destination_interest_info}" class="nav-item">
+                  <li th:each="category,iterStat : ${job_interest_info}" class="nav-item">
                     <a th:class="'nav-link' + ${iterStat.index == 0 ? ' active' : ''}" th:href="'#interest-ct-tab' + ${iterStat.index}" data-toggle="tab" style="font-family: 'Jeju Hallasan', serif;"><small th:text="${category.key} + ' (' + ${category.totalSize} + ')'"></small></a>
                   </li>
                 </ul>
@@ -193,10 +187,10 @@
         </div>
 
         <div class="tab-content">
-          <th:block th:each="destlist,iterStat : ${destination_interest_info}" th:if="${destination_interest_info != null}">
+          <th:block th:each="joblist,iterStat : ${job_interest_info}" th:if="${job_interest_info != null}">
             <div th:class="'tab-pane fade' + ${iterStat.index == 0 ? ' active in show' : ''}" th:id="'interest-ct-tab' + ${iterStat.index}">
 
-              <th:block th:if="${destlist.jobListMap != null}">
+              <th:block th:if="${joblist.jobListMap != null}">
                 <table class="table table-striped table-bordered" style="font-family: 'Jeju Hallasan', serif;">
                   <thead>
                   <tr class="text-center">
@@ -207,8 +201,8 @@
                   <tr>
                     <td class="align-middle">
                       <ul class="nav nav-pills">
-                        <li th:each="ac,iterStat : ${destlist.jobListMap}" class="nav-item">
-                          <a th:class="'nav-link' + ${iterStat.index == 0 ? ' active' : ''}" th:href="'#interest-ac-tab-' + ${destlist.seq} + '-' + ${iterStat.index}" data-toggle="tab"><small th:text="${ac.key} + ' (' + ${ac.value.size()} + ')'"></small></a>
+                        <li th:each="ac,iterStat : ${joblist.jobListMap}" class="nav-item">
+                          <a th:class="'nav-link' + ${iterStat.index == 0 ? ' active' : ''}" th:href="'#interest-ac-tab-' + ${joblist.seq} + '-' + ${iterStat.index}" data-toggle="tab"><small th:text="${ac.key} + ' (' + ${ac.value.size()} + ')'"></small></a>
                         </li>
                       </ul>
                     </td>
@@ -217,15 +211,15 @@
               </th:block>
 
               <div class="tab-content">
-                <th:block th:each="list,iterStat : ${destlist.jobListMap}" th:if="${destlist.jobListMap != null}">
-                  <div th:class="'tab-pane fade' + ${iterStat.index == 0 ? ' active in show' : ''}" th:id="'interest-ac-tab-' + ${destlist.seq} + '-' + ${iterStat.index}">
+                <th:block th:each="list,iterStat : ${joblist.jobListMap}" th:if="${joblist.jobListMap != null}">
+                  <div th:class="'tab-pane fade' + ${iterStat.index == 0 ? ' active in show' : ''}" th:id="'interest-ac-tab-' + ${joblist.seq} + '-' + ${iterStat.index}">
                     <div class="row">
                       <th:block th:each="doc,iterStat : ${list.value}" th:if="${list.value != null}">
                         <div class="col-md-4 col-sm-6 portfolio2-item">
 
                           <div class="portfolio2-caption">
 
-                            <a class="portfolio2-link" th:onclick="'javascript:show_detail(' + ${doc.contentid} + ')'">
+                            <a class="portfolio2-link" th:onclick="'javascript:show_detail(' + ${doc.id} + ')'">
                               <div class="portfolio2-hover">
                                 <div class="portfolio2-hover-content">
                                   <i class="fa fa-plus fa-3x"></i>
@@ -261,7 +255,7 @@
     </section>
     </th:block>
 
-    <!-- Destinations -->
+    <!-- jobs -->
     <section id="portfolio" style="padding: 50px 0;">
       <div class="container">
         <div class="row">
@@ -269,16 +263,16 @@
             <h6 class="section-heading text-uppercase">
               <span class="fa-stack fa-4x">
                 <i class="fa fa-stop fa-stack-2x text-info"></i>
-                <i class="fa fa-group fa-stack-1x fa-inverse"></i>
+                <i class="fa fa-calendar fa-stack-1x fa-inverse"></i>
               </span>
             </h6>
-            <h3 class="section-subheading text-muted" style="margin-bottom: 30px;font-family: 'Jeju Hallasan', serif;">인기 여행지</h3>
-            <!--<tenping class="adsbytenping" style="width: 100%; margin: 0px auto; display: block; max-width: 580px;" tenping-ad-client="ULkZYhHDonqxNgJx%2bd2t5XgWCcx0QUdnsdGDbY1yMIshP4q34efQL0ddArqjWnF3" tenping-ad-display-type="UD8Mia8gyIoT5Z2MT6VB3Q%3d%3d"></tenping><script async src='//ads.tenping.kr/scripts/adsbytenping.min.js' ></script>-->
+            <h3 class="section-subheading text-muted" style="margin-bottom: 30px;font-family: 'Jeju Hallasan', serif;">새로운 공고</h3>
+
             <div>
-              <th:block th:if="${destination_info != null}">
+              <th:block th:if="${job_info != null}">
                 <ul class="nav nav-tabs">
-                  <li th:each="category,iterStat : ${destination_info}" class="nav-item">
-                    <a th:class="'nav-link' + ${iterStat.index == 0 ? ' active' : ''}" th:href="'#popular-ct-tab' + ${iterStat.index}" data-toggle="tab" style="font-family: 'Jeju Hallasan', serif;"><small th:text="${category.key} + ' (' + ${category.totalSize} + ')'"></small></a>
+                  <li th:each="category,iterStat : ${job_info}" class="nav-item">
+                    <a th:class="'nav-link' + ${iterStat.index == 0 ? ' active' : ''}" th:href="'#new-ct-tab' + ${iterStat.index}" data-toggle="tab" style="font-family: 'Jeju Hallasan', serif;"><small th:text="${category.key} + ' (' + ${category.totalSize} + ')'"></small></a>
                   </li>
                 </ul>
               </th:block>
@@ -288,10 +282,10 @@
         </div>
 
         <div class="tab-content">
-          <th:block th:each="destlist,iterStat : ${destination_info}" th:if="${destination_info != null}">
-            <div th:class="'tab-pane fade' + ${iterStat.index == 0 ? ' active in show' : ''}" th:id="'popular-ct-tab' + ${iterStat.index}">
+          <th:block th:each="joblist,iterStat : ${job_info}" th:if="${job_info != null}">
+            <div th:class="'tab-pane fade' + ${iterStat.index == 0 ? ' active in show' : ''}" th:id="'new-ct-tab' + ${iterStat.index}">
 
-              <th:block th:if="${destlist.jobListMap != null}">
+              <th:block th:if="${joblist.jobListMap != null}">
                 <table class="table table-striped table-bordered" style="font-family: 'Jeju Hallasan', serif;">
                   <thead>
                     <tr class="text-center">
@@ -302,8 +296,8 @@
                     <tr>
                       <td class="align-middle">
                         <ul class="nav nav-pills">
-                          <li th:each="ac,iterStat : ${destlist.jobListMap}" class="nav-item">
-                            <a th:class="'nav-link' + ${iterStat.index == 0 ? ' active' : ''}" th:href="'#popular-ac-tab-' + ${destlist.seq} + '-' + ${iterStat.index}" data-toggle="tab"><small th:text="${ac.key} + ' (' + ${ac.value.size()} + ')'"></small></a>
+                          <li th:each="ac,iterStat : ${joblist.jobListMap}" class="nav-item">
+                            <a th:class="'nav-link' + ${iterStat.index == 0 ? ' active' : ''}" th:href="'#new-ac-tab-' + ${joblist.seq} + '-' + ${iterStat.index}" data-toggle="tab"><small th:text="${ac.key} + ' (' + ${ac.value.size()} + ')'"></small></a>
                           </li>
                         </ul>
                       </td>
@@ -312,13 +306,13 @@
               </th:block>
 
               <div class="tab-content">
-                <th:block th:each="list,iterStat : ${destlist.jobListMap}" th:if="${destlist.jobListMap != null}">
-                  <div th:class="'tab-pane fade' + ${iterStat.index == 0 ? ' active in show' : ''}" th:id="'popular-ac-tab-' + ${destlist.seq} + '-' + ${iterStat.index}">
+                <th:block th:each="list,iterStat : ${joblist.jobListMap}" th:if="${joblist.jobListMap != null}">
+                  <div th:class="'tab-pane fade' + ${iterStat.index == 0 ? ' active in show' : ''}" th:id="'new-ac-tab-' + ${joblist.seq} + '-' + ${iterStat.index}">
                     <div class="row">
                     <th:block th:each="doc,iterStat: ${list.value}" th:if="${list.value != null}">
                       <div class="col-md-4 col-sm-6 portfolio-item">
                         <div class="portfolio-caption">
-                          <a class="portfolio-link" th:onclick="'javascript:show_detail(' + ${doc.contentid} + ')'">
+                          <!--<a class="portfolio-link" th:onclick="'javascript:show_detail(' + ${doc.id} + ')'">
                             <div class="portfolio-hover">
                               <div class="portfolio-hover-content">
                                 <i class="fa fa-plus fa-3x"></i>
@@ -327,16 +321,18 @@
 
                             <img class="img-fluid lazy" style="border: 1px solid #aaaaaa;padding:1px;" th:attr="data-src=${(doc.firstimage2 != null) ? doc.firstimage2 : '/img/no_image_available.png'}" th:alt="${doc.title}"/>
 
-                          </a>
-
-                          <h6 th:text="${doc.titleshort}" style="font-family: 'cwTeXHei', 'Jeju Hallasan', serif;"></h6>
-                          <div class="text-left">
-                            <small class="text-muted" th:text="${doc.overviewshort}"></small>
+                          </a>-->
+                          <div class="text-left aligh-middle" style="padding-bottom:5px;">
+                             <i class="fa fa-building-o"></i>
+                             <small class="text-muted" th:text="${doc.get('company-name-short')}"></small>
                           </div>
+
+                          <h6 class="text-left" th:text="${doc.get('position-title-short')}" style="font-family: 'cwTeXHei', 'Jeju Hallasan', serif;"></h6>
+
                           <hr/>
-                          <ul class="post-footer">
-                            <li class="fa fa-eye" th:text="' ' +${doc.clickcount}"></li>
-                          </ul>
+                            <!--<ul class="post-footer">
+                              <li class="fa fa-eye" th:text="' ' +${doc.position-job-type}"></li>
+                            </ul>-->
                         </div>
                       </div>
                     </th:block>
@@ -404,10 +400,10 @@
             </table>
 
             <!--<p class="text-muted">I hope this can help Mom and Dad find out where to go every weekend. There are 4 options.</p>
-            <p class="text-muted">- Real-time popular destinations.</p>
+            <p class="text-muted">- Real-time popular jobs.</p>
             <p class="text-muted">- You might be interested.</p>
-            <p class="text-muted">- Destinations in short-distance.</p>
-            <p class="text-muted">- Related destinations.</p>-->
+            <p class="text-muted">- jobs in short-distance.</p>
+            <p class="text-muted">- Related jobs.</p>-->
           </div>
         </div>
       </div>
@@ -451,13 +447,13 @@
       <div class="container">
         <div class="row">
           <div class="col-lg-12 mx-auto text-center">
-            <p class="large text-muted" style="font-family: 'cwTeXHei', 'Jeju Hallasan', serif;">본 정보는 한국관광공사에서 제공하는 공공데이터를 활용하였으며, 현지사정에 의해 변경될 수 있습니다.</p>
+              Powered by <a href="http://www.saramin.co.kr" target="_blank">취업 사람인</a>
           </div>
         </div>
 
         <div class="row">
           <div class="col-md-6 mx-auto text-center">
-            <span class="copyright" style="font-family: 'cwTeXHei', 'Jeju Hallasan', serif;">Copyright &copy; 2018 GeoGiGaNi All Rights Reserved.</span>
+            <span class="copyright" style="font-family: 'cwTeXHei', 'Jeju Hallasan', serif;">Copyright &copy; 2018 GongGoChatNi All Rights Reserved.</span>
           </div>
         </div>
       </div>
@@ -502,9 +498,9 @@
         $("#search_form_header").submit();
       }
 
-      function show_detail(dest_id) {
-        var url = /*[[@{'/destination-detail/'}]]*/;
-        url = url + dest_id;
+      function show_detail(job_id) {
+        var url = /*[[@{'/job-detail/'}]]*/;
+        url = url + job_id;
         var form = document.createElement("form");
         form.setAttribute("method", "GET");
         form.setAttribute("action", url);
@@ -534,7 +530,7 @@
       }
 
       function showPosition(position) {
-          var url = /*[[@{'/short-dist-destinations-from-me/'}]]*/;
+          var url = /*[[@{'/short-dist-jobs-from-me/'}]]*/;
           url = url + position.coords.latitude + '/' + position.coords.longitude;
 
           var form = document.createElement("form");
