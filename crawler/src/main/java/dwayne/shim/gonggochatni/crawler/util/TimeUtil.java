@@ -14,15 +14,15 @@ public class TimeUtil {
         return formatter.format(cal.getTimeInMillis());
     }
 
-    public static String getTimestampHoursBefore(int hours) {
+    public static String getTimestampMinutesBefore(int minutes) {
         Calendar cal = Calendar.getInstance();
         cal.setTime(new Date());
-        cal.add(Calendar.HOUR, hours * -1);
+        cal.add(Calendar.MINUTE, minutes * -1);
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
         return formatter.format(cal.getTimeInMillis());
     }
 
     public static void main(String[] args) throws Exception {
-        System.out.println(getTimestampHoursBefore(3));
+        System.out.println(getTimestampMinutesBefore(20));
     }
 }

@@ -106,7 +106,7 @@ public class JobCrawler {
     }
 
     public void executeIncremental(String url,
-                                   int hoursBefore,
+                                   int minutesBefore,
                                    DocProcessing docProcessing) throws Exception {
 
         // 1. xml parser
@@ -125,7 +125,7 @@ public class JobCrawler {
         int pageNo = 0;
         try (ApiCaller apiCaller = new DefaultApiCaller()) {
             while (true) {
-                keepCrawling = readJobData(jobDataMap, apiCaller, apiInfo, parameters, pageNo++, URLEncoder.encode(TimeUtil.getTimestampHoursBefore(hoursBefore), "UTF-8"), dBuilder);
+                keepCrawling = readJobData(jobDataMap, apiCaller, apiInfo, parameters, pageNo++, URLEncoder.encode(TimeUtil.getTimestampMinutesBefore(minutesBefore), "UTF-8"), dBuilder);
                 if(!keepCrawling) break;
 
                 for(Map<String, String> docMap : jobDataMap.values()) {

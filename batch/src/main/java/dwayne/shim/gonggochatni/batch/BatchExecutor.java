@@ -80,10 +80,10 @@ public class BatchExecutor {
 
     public void executeIncrementalStep(Properties prop) throws Exception {
         String url = prop.getProperty("index.rest.incremental");
-        int hoursBefore = Integer.parseInt(prop.getProperty("crawl.hours.before"));
+        int minutessBefore = Integer.parseInt(prop.getProperty("crawl.minutes.before"));
         String keyExtractorConfigPath = prop.getProperty("key-extractor.config.path");
         JobCrawler crawler = new JobCrawler();
-        crawler.executeIncremental(url, hoursBefore, new DocProcessing(new KeywordExtractor(keyExtractorConfigPath)));
+        crawler.executeIncremental(url, minutessBefore, new DocProcessing(new KeywordExtractor(keyExtractorConfigPath)));
 
         //-------------------------------------------------------------------------------
         // force to merge after incremental indexing ...
