@@ -61,6 +61,8 @@ public class JobCrawler {
         ObjectMapper objectMapper = new ObjectMapper();
         outDir.mkdirs();
         File[] oldFiles = outDir.listFiles();
+        int total = oldFiles.length;
+        int deletedCount = 0;
         for(File oldFile : oldFiles) {
             try {
                 Map<String, String> oldDocMap = objectMapper.readValue(oldFile, Map.class);
@@ -68,7 +70,7 @@ public class JobCrawler {
                 String expiration = oldDocMap.get(JobDataIndexField.EXPIRATION_TIMESTAMP.label());
                 long now = System.currentTimeMillis()/1000;
                 if(Long.parseLong(expiration) > now) continue;
-                System.out.println("DELETED : " + now + " - " + expiration);
+                System.out.println("DELETED : (" + ++deletedCount + '/' + total + ") " + now + " - " + expiration);
             } catch (Exception e) {
                 continue;
             }

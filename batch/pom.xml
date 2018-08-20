@@ -37,7 +37,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>dwayne.shim.geogigani.batch.BatchExecutor</mainClass>
+                            <mainClass>dwayne.shim.gonggochatni.batch.BatchExecutor</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>
