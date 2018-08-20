@@ -29,6 +29,7 @@
         <module>searching</module>
         <module>allinone-data-service</module>
         <module>batch</module>
+        <module>front-service</module>
     </modules>
 
     <!-- dependencies -->
