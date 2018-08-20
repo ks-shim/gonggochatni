@@ -84,6 +84,16 @@ public class BatchExecutor {
         String keyExtractorConfigPath = prop.getProperty("key-extractor.config.path");
         JobCrawler crawler = new JobCrawler();
         crawler.executeIncremental(url, hoursBefore, new DocProcessing(new KeywordExtractor(keyExtractorConfigPath)));
+
+        //-------------------------------------------------------------------------------
+        // force to merge after incremental indexing ...
+        //-------------------------------------------------------------------------------
+        System.out.println("\n\nForce to merge ...");
+        url = prop.getProperty("index.rest.force-merge");
+        try (ApiCaller apiCaller = new DefaultApiCaller()) {
+            apiCaller.callAsPut(url);
+        }
+        System.out.println("Merged index ...");
     }
 
     public static void main(String[] args) throws Exception {

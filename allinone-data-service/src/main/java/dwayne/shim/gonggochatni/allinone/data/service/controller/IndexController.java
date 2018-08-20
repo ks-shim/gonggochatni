@@ -69,4 +69,9 @@ public class IndexController {
     public void doIncrementalResumeIndexing(@RequestBody List<Map<String, String>> docList) throws Exception {
         searchingExecutor.updateDocuments(docList, JobDataIndexField.ID.label());
     }
+
+    @RequestMapping(value = {"/force-merge"}, produces = "application/json; charset=utf8", method = {RequestMethod.PUT})
+    public void forceMerge() throws Exception {
+        searchingExecutor.forceMerging();
+    }
 }

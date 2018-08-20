@@ -111,6 +111,12 @@ public class SearchingExecutor {
         }
     }
 
+    public void forceMerging() throws Exception {
+        synchronized (indexWriterLock) {
+            indexWriter.forceMerge(1);
+        }
+    }
+
     private final Map<String, JobDataIndexField> indexFieldTypeMap = JobDataIndexField.map();
     private Document mapToDocument(Map<String, String> documentMap, Document document) {
         Iterator<String> keyIter = documentMap.keySet().iterator();
