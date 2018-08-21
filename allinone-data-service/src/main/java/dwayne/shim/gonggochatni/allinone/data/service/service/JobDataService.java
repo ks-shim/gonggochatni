@@ -51,7 +51,7 @@ public class JobDataService {
             List<JobData> oldJobDataList = cache.get(key);
             if(oldJobDataList != null) return oldJobDataList;
 
-            SearchResult result = searchingExecutor.searchAllSorted(null, JobDataIndexField.MODIFICATION_TIMESTAMP_SORT.label(), jobNewSize);
+            SearchResult result = searchingExecutor.searchAllSorted(null, JobDataIndexField.POSTING_TIMESTAMP_SORT.label(), jobNewSize);
             oldJobDataList = asJobDataList(result);
             cache.put(key, oldJobDataList);
             return oldJobDataList;
