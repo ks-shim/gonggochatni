@@ -256,7 +256,7 @@
     </th:block>
 
     <!-- jobs -->
-    <section id="portfolio" style="padding: 50px 0;">
+    <section id="portfolio" style="padding: 20px 0;">
       <div class="container">
         <div class="row">
           <div class="col-lg-12 text-center">
@@ -266,7 +266,8 @@
                 <i class="fa fa-calendar fa-stack-1x fa-inverse"></i>
               </span>
             </h6>
-            <h3 class="section-subheading text-muted" style="margin-bottom: 30px;font-family: 'Noto Sans KR', serif;">새로운 공고</h3>
+
+            <h3 class="section-subheading" style="margin-bottom: 30px;font-family: 'Noto Sans KR', serif;">최신 공고</h3>
 
             <div>
               <th:block th:if="${job_info != null}">
@@ -330,9 +331,10 @@
                           <h6 class="text-left" th:text="${doc.get('position-title-short')}" style="font-family: 'cwTeXHei', 'Noto Sans KR', serif;"></h6>
 
                           <hr/>
-                            <!--<ul class="post-footer">
-                              <li class="fa fa-eye" th:text="' ' +${doc.position-job-type}"></li>
-                            </ul>-->
+                          <ul class="post-footer" style="margin: 0; padding: 0;font-family: 'cwTeXHei', 'Noto Sans KR', serif;font-size:13px;">
+                            <li class="fa fa-user" style="color:#28a745;" th:text="' ' +${doc.get('position-job-type-short')}"></li>
+                            <li class="fa fa-calendar" style="color:#28a745;" th:text="' ~ ' + ${doc.get('expiration-timestamp-formatted')}"></li>
+                          </ul>
                         </div>
                       </div>
                     </th:block>

@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -35,6 +36,15 @@ public class FrontService {
         for(JobData jd : jobDatas) {
             Map<String, String> docMap = jd.getInfoMap();
 
+            // make additional fields ...
+            try {
+                shortenContent(docMap, JobInfoField.POSITION_JOB_TYPE.label(), JobInfoField.POSITION_JOB_TYPE_SHORT.label(), 6);
+                formatTimestamp(docMap, JobInfoField.EXPIRATION_TIMESTAMP.label(), JobInfoField.EXPIRATION_TIMESTAMP_FORMATTED.label());
+            } catch (Exception e) {
+                continue;
+            }
+
+            // do something ...
             String jobCategoryCodeStr = docMap.get(JobInfoField.POSITION_JOB_CATEGORY_CODE.label());
             String areaCodeStr = docMap.get(JobInfoField.POSITION_LOCATION_CODE.label());
 
@@ -64,6 +74,28 @@ public class FrontService {
                 jobInfo.add(key2, valueMap);
             }
         }
+    }
+
+    private void shortenContent(Map<String, String> docMap,
+                               String sourceFieldName,
+                               String targetFieldName,
+                               int contentLengthLimit) throws Exception {
+        String content = docMap.get(sourceFieldName);
+        if(content == null) return;
+        if(content.length() > contentLengthLimit) content = content.substring(0, contentLengthLimit-3) + " ...";
+        docMap.put(targetFieldName, content);
+    }
+
+    private void formatTimestamp(Map<String, String> docMap,
+                                 String sourceFieldName,
+                                 String targetFieldName) throws Exception {
+        String content = docMap.get(sourceFieldName);
+        if(content == null) return;
+
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(Long.parseLong(content + "000"));
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        docMap.put(targetFieldName, formatter.format(cal.getTime()));
     }
 
     private Set<String> asKeySet(String keyStr, LabelFinder labelFinder) {
