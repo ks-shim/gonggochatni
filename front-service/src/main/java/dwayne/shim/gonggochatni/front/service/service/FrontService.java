@@ -30,7 +30,7 @@ public class FrontService {
 
     private List<Job2DepthInfo> asCategorized2DepthJobInfo(JobData[] jobDatas) {
 
-        Map<String, Job2DepthInfo> keyJobMap = new HashMap<>();
+        Map<String, Job2DepthInfo> keyJobMap = new TreeMap<>();
 
         AtomicInteger seq = new AtomicInteger(0);
         for(JobData jd : jobDatas) {
