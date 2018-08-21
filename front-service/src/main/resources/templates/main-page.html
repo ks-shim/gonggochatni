@@ -91,13 +91,13 @@
               <a class="nav-link js-scroll-trigger" href="#portfolio2" style="font-family: 'Noto Sans KR', serif;"><i class="fa fa-user fa-fw"></i>맞춤공고</a>
             </th:li>
             <li class="nav-item">
-              <a class="nav-link js-scroll-trigger" href="#portfolio" style="font-family: 'Noto Sans KR', serif;"><i class="fa fa-group fa-fw"></i>새로운공고</a>
+              <a class="nav-link js-scroll-trigger" href="#portfolio" style="font-family: 'Noto Sans KR', serif;"><i class="fa fa-calendar fa-fw"></i>최신공고</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link js-scroll-trigger" href="#about" style="font-family: 'Noto Sans KR', serif;"><i class="fa fa-file-text-o fa-fw"></i>About</a>
+              <a class="nav-link js-scroll-trigger" href="#about" style="font-family: 'Noto Sans KR', serif;"><i class="fa fa-info-circle fa-fw"></i>공고찾니는?</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link js-scroll-trigger" href="#team" style="font-family: 'Noto Sans KR', serif;"><i class="fa fa-envelope-o fa-fw"></i>Helper</a>
+              <a class="nav-link js-scroll-trigger" href="#team" style="font-family: 'Noto Sans KR', serif;"><i class="fa fa-envelope-o fa-fw"></i>Developer</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" th:href="@{/statistics}" style="font-family: 'Noto Sans KR', serif;"><i class="fa fa-bar-chart-o fa-fw"></i>통계</a>
@@ -318,7 +318,7 @@
                              <small class="text-muted" th:text="${doc.get('company-name-short')}"></small>
                           </div>
 
-                          <a href="#" style="color: #000000;">
+                          <a href="#" style="color: #000000;" th:onclick="'javascript:show_detail(' + ${doc.get('id')} + ')'">
                             <h6 class="text-left" th:text="${doc.get('position-title-short')}" style="font-family: 'cwTeXHei', 'Noto Sans KR', serif;"></h6>
                           </a>
 
@@ -457,57 +457,6 @@
         form.submit();
       }
 
-      function show_dust() {
-        var url = /*[[@{'/dust-info'}]]*/;
-        var form = document.createElement("form");
-        form.setAttribute("method", "GET");
-        form.setAttribute("action", url);
-        document.body.appendChild(form);
-        form.submit();
-      }
-
-      function getLocation() {
-          if (navigator.geolocation) {
-              navigator.geolocation.getCurrentPosition(showPosition, handleError, {
-                enableHighAccuracy: false,
-                maximumAge: 0,
-                timeout: 20000
-              });
-          } else {
-              alert('Geolocation is not supported by this browser.');
-          }
-      }
-
-      function showPosition(position) {
-          var url = /*[[@{'/short-dist-jobs-from-me/'}]]*/;
-          url = url + position.coords.latitude + '/' + position.coords.longitude;
-
-          var form = document.createElement("form");
-          form.setAttribute("method", "GET");
-          form.setAttribute("action", url);
-          document.body.appendChild(form);
-          form.submit();
-      }
-
-      function handleError(error) {
-        switch(error.code) {
-        case error.PERMISSION_DENIED:
-            alert('PERMISSION DENIED');
-            break;
-        case error.POSITION_UNAVAILABLE:
-            // 위치 정보 사용이 불가능할 때
-            alert('POSITION UNAVAILABLE');
-            break;
-        case error.TIMEOUT:
-            // 위치 정보를 가져오려 시도했지만, 시간이 초과되었을 때
-            alert('TIMEOUT');
-            break;
-        case error.UNKNOWN_ERROR:
-            // 기타 알 수 없는 오류가 발생하였을 때
-            alert('UNKNOWN ERROR');
-            break;
-        }
-      }
     </script>
 
   </body>

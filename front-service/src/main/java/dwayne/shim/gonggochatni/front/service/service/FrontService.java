@@ -20,11 +20,33 @@ public class FrontService {
     @Value("${rest.new}")
     private String restNew;
 
+    @Value("${rest.detail}")
+    private String restDetail;
+
+    @Value("${rest.search}")
+    private String restSearch;
+
+    @Value("${rest.similar}")
+    private String restSimilar;
+
     @Autowired
     private RestTemplate restTemplate;
 
     public List<Job2DepthInfo> getNewJobs() {
         JobData[] result = restTemplate.getForObject(restNew, JobData[].class);
+        return asCategorized2DepthJobInfo(result);
+    }
+
+    public Map<String, String> getJobDetail(String jobId,
+                                            String userId,
+                                            boolean ignoreUser) {
+        String url = restDetail + '/' + jobId + ((userId == null || userId.isEmpty()) ? "" : "?userId=" + userId + "&ignoreUser=" + ignoreUser);
+        JobData result = restTemplate.getForObject(url, JobData.class);
+        return result.getInfoMap();
+    }
+
+    public List<Job2DepthInfo> getSimilarJobs(String jobId) {
+        JobData[] result = restTemplate.getForObject(restSimilar + '/' + jobId, JobData[].class);
         return asCategorized2DepthJobInfo(result);
     }
 
