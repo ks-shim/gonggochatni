@@ -212,16 +212,20 @@
                       <div class="col-md-4 col-sm-6 portfolio-item">
                         <div class="portfolio-caption ld-over">
                           <div style="font-size:48px;color:#333;" class="ld ld-ring ld-spin"></div>
-                          <div class="text-left aligh-middle" style="padding-bottom:5px;">
-                             <i class="fa fa-building-o"></i>
-                             <small class="text-muted" th:text="${doc.get('company-name-short')}"></small>
+                          <div class="text-left align-middle" style="padding-bottom:5px;">
+                            <i class="fa fa-building-o"></i>
+                            <span class="text-muted" th:text="${doc.get('company-name-short')}" style="font-family: 'cwTeXHei', 'Noto Sans KR', serif;font-size:14px;"></span>
                           </div>
 
                           <a style="color: #000000;" th:onclick="'javascript:show_detail(this,' + ${doc.get('id')} + ')'">
                             <h6 class="text-left" th:text="${doc.get('position-title-short')}" style="font-family: 'cwTeXHei', 'Noto Sans KR', serif;"></h6>
                           </a>
 
-                          <hr/>
+                          <div class="align-middle text-right" style="padding-bottom:5px;">
+                            <i class="fa fa-map-marker"></i>
+                            <span class="text-muted" th:utext="${doc.get('position-location-short')}" style="font-family: 'cwTeXHei', 'Noto Sans KR', serif;font-size:12px;"></span>
+                          </div>
+                          <hr style="margin-top:0rem;"/>
                           <ul class="post-footer" style="margin: 0; padding: 0;font-family: 'cwTeXHei', 'Noto Sans KR', serif;font-size:13px;">
                             <li class="fa fa-user" style="color:#28a745;" th:text="' ' +${doc.get('position-job-type-short')}"></li>
                             <li class="fa fa-calendar" style="color:#28a745;" th:text="' ~ ' + ${doc.get('expiration-timestamp-formatted')}"></li>
@@ -248,7 +252,7 @@
       <div class="container">
         <div class="row">
           <div class="col-md-6 mx-auto text-center">
-            <span class="copyright" style="font-family: 'cwTeXHei', 'Noto Sans KR', serif;">Copyright &copy; 2018 GongGoChatNi All Rights Reserved.</span>
+            <span class="copyright" style="font-family: 'cwTeXHei', 'Noto Sans KR', serif;">Copyright &copy; 2018 GongoChatNi All Rights Reserved.</span>
           </div>
         </div>
       </div>

@@ -34,6 +34,7 @@ public enum JobInfoField {
     POSITION_TITLE_SHORT("position-title-short"),
     POSITION_TITLE_KEYWORDS("company-title-keywords"),
     POSITION_LOCATION("position-location"),
+    POSITION_LOCATION_SHORT("position-location-short"),
     POSITION_LOCATION_CODE("position-location-code"),
     POSITION_JOB_TYPE("position-job-type"),
     POSITION_JOB_TYPE_SHORT("position-job-type-short"),

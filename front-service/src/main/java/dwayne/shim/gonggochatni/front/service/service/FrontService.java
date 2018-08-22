@@ -76,6 +76,7 @@ public class FrontService {
 
         Map<String, Job2DepthInfo> keyJobMap = new TreeMap<>();
 
+        StringBuilder sb = new StringBuilder();
         AtomicInteger seq = new AtomicInteger(0);
         for(JobData jd : jobDatas) {
             Map<String, String> docMap = jd.getInfoMap();
@@ -83,6 +84,7 @@ public class FrontService {
             // make additional fields ...
             try {
                 shortenContent(docMap, JobInfoField.POSITION_JOB_TYPE.label(), JobInfoField.POSITION_JOB_TYPE_SHORT.label(), 6);
+                shortenContentByComma(docMap, JobInfoField.POSITION_LOCATION.label(), JobInfoField.POSITION_LOCATION_SHORT.label(), 2, sb);
                 formatTimestamp(docMap, JobInfoField.EXPIRATION_TIMESTAMP.label(), JobInfoField.EXPIRATION_TIMESTAMP_FORMATTED.label());
             } catch (Exception e) {
                 continue;
@@ -128,6 +130,27 @@ public class FrontService {
         if(content == null) return;
         if(content.length() > contentLengthLimit) content = content.substring(0, contentLengthLimit-3) + " ...";
         docMap.put(targetFieldName, content);
+    }
+
+    private void shortenContentByComma(Map<String, String> docMap,
+                                       String sourceFieldName,
+                                       String targetFieldName,
+                                       int contentLengthLimit,
+                                       StringBuilder sb) throws Exception {
+        String content = docMap.get(sourceFieldName);
+        if(content == null) return;
+        String[] contents = content.split(",");
+
+        sb.setLength(0);
+        for(int i=0; i<contentLengthLimit; i++) {
+            if(contents.length <= i) break;
+
+            if(sb.length() > 0) sb.append(',');
+            sb.append(contents[i]);
+        }
+
+        if(contents.length > contentLengthLimit) sb.append(" ...");
+        docMap.put(targetFieldName, sb.toString());
     }
 
     private void formatTimestamp(Map<String, String> docMap,
