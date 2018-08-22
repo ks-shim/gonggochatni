@@ -25,6 +25,8 @@
 
     <!-- Custom styles for this template -->
     <link th:href="@{/css/agency.min.css}" rel="stylesheet"/>
+    <link th:href="@{/css/loading.css}" rel="stylesheet"/>
+    <link th:href="@{/css/loading-btn.css}" rel="stylesheet"/>
 
     <style>
       .post-footer{ position: relative; bottom: 0; left: 0; right: 0; text-align: center; }
@@ -301,7 +303,9 @@
         $("#search_form_header").submit();
       }
 
-      function show_detail(job_id) {
+      function show_detail(elemt, job_id) {
+        elemt.parentNode.classList.add('running');
+
         var url = /*[[@{'/job-detail/'}]]*/;
         url = url + job_id;
         var form = document.createElement("form");

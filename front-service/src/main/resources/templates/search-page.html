@@ -25,6 +25,8 @@
 
     <!-- Custom styles for this template -->
     <link th:href="@{/css/agency.min.css}" rel="stylesheet"/>
+    <link th:href="@{/css/loading.css}" rel="stylesheet"/>
+    <link th:href="@{/css/loading-btn.css}" rel="stylesheet"/>
 
     <style>
       .post-footer{ position: relative; bottom: 0; left: 0; right: 0; text-align: center; }
@@ -159,7 +161,7 @@
             <h6 class="section-heading text-uppercase">
               <span class="fa-stack fa-4x">
                 <i class="fa fa-stop fa-stack-2x text-info"></i>
-                <i class="fa fa-calendar fa-stack-1x fa-inverse"></i>
+                <i class="fa fa-search fa-stack-1x fa-inverse"></i>
               </span>
             </h6>
 
@@ -208,13 +210,14 @@
                     <div class="row">
                     <th:block th:each="doc,iterStat: ${list.value}" th:if="${list.value != null}">
                       <div class="col-md-4 col-sm-6 portfolio-item">
-                        <div class="portfolio-caption">
+                        <div class="portfolio-caption ld-over">
+                          <div style="font-size:48px;color:#333;" class="ld ld-ring ld-spin"></div>
                           <div class="text-left aligh-middle" style="padding-bottom:5px;">
                              <i class="fa fa-building-o"></i>
                              <small class="text-muted" th:text="${doc.get('company-name-short')}"></small>
                           </div>
 
-                          <a style="color: #000000;" th:onclick="'javascript:show_detail(' + ${doc.get('id')} + ')'">
+                          <a style="color: #000000;" th:onclick="'javascript:show_detail(this,' + ${doc.get('id')} + ')'">
                             <h6 class="text-left" th:text="${doc.get('position-title-short')}" style="font-family: 'cwTeXHei', 'Noto Sans KR', serif;"></h6>
                           </a>
 
@@ -290,7 +293,9 @@
         $("#search_form_header").submit();
       }
 
-      function show_detail(job_id) {
+      function show_detail(elemt, job_id) {
+        elemt.parentNode.classList.add('running');
+
         var url = /*[[@{'/job-detail/'}]]*/;
         url = url + job_id;
         var form = document.createElement("form");
