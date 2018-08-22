@@ -5,6 +5,7 @@ import dwayne.shim.gonggochatni.front.service.constants.AreaCode;
 import dwayne.shim.gonggochatni.front.service.constants.JobCategoryCode;
 import dwayne.shim.gonggochatni.front.service.constants.JobInfoField;
 import dwayne.shim.gonggochatni.front.service.model.Job2DepthInfo;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -14,6 +15,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
+@Log4j2
 @Service
 public class FrontService {
 
@@ -29,6 +31,9 @@ public class FrontService {
     @Value("${rest.similar}")
     private String restSimilar;
 
+    @Value("${rest.interest}")
+    private String restInterest;
+
     @Autowired
     private RestTemplate restTemplate;
 
@@ -42,11 +47,23 @@ public class FrontService {
                                             boolean ignoreUser) {
         String url = restDetail + '/' + jobId + ((userId == null || userId.isEmpty()) ? "" : "?userId=" + userId + "&ignoreUser=" + ignoreUser);
         JobData result = restTemplate.getForObject(url, JobData.class);
+        try {
+            formatTimestamp(result.getInfoMap(), JobInfoField.EXPIRATION_TIMESTAMP.label(), JobInfoField.EXPIRATION_TIMESTAMP_FORMATTED.label());
+        } catch (Exception e) {
+            log.error(e);
+        }
         return result.getInfoMap();
     }
 
     public List<Job2DepthInfo> getSimilarJobs(String jobId) {
         JobData[] result = restTemplate.getForObject(restSimilar + '/' + jobId, JobData[].class);
+        return asCategorized2DepthJobInfo(result);
+    }
+
+    public List<Job2DepthInfo> getInterestingJobs(String userId) {
+        if(userId == null || userId.trim().isEmpty()) return new ArrayList<>();
+
+        JobData[] result = restTemplate.getForObject(restInterest + "/" + userId, JobData[].class);
         return asCategorized2DepthJobInfo(result);
     }
 
