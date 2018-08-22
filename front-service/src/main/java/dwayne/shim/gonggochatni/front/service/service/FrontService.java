@@ -67,6 +67,11 @@ public class FrontService {
         return asCategorized2DepthJobInfo(result);
     }
 
+    public List<Job2DepthInfo> searchJobs(String keywords) {
+        JobData[] result = restTemplate.getForObject(restSearch + "?keywords=" + keywords, JobData[].class);
+        return asCategorized2DepthJobInfo(result);
+    }
+
     private List<Job2DepthInfo> asCategorized2DepthJobInfo(JobData[] jobDatas) {
 
         Map<String, Job2DepthInfo> keyJobMap = new TreeMap<>();

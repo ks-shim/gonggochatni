@@ -88,16 +88,16 @@
         <div class="collapse navbar-collapse" id="navbarResponsive">
           <ul class="navbar-nav text-uppercase ml-auto">
             <th:li  th:if="${job_interest_info != null}" class="nav-item">
-              <a class="nav-link js-scroll-trigger" href="#portfolio2" style="font-family: 'Noto Sans KR', serif;"><i class="fa fa-user fa-fw"></i>맞춤공고</a>
+              <a class="nav-link js-scroll-trigger" href="#portfolio2" style="font-family: 'Noto Sans KR', serif;"><i class="fa fa-rocket fa-fw"></i>맞춤공고</a>
             </th:li>
             <li class="nav-item">
               <a class="nav-link js-scroll-trigger" href="#portfolio" style="font-family: 'Noto Sans KR', serif;"><i class="fa fa-calendar fa-fw"></i>최신공고</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link js-scroll-trigger" href="#about" style="font-family: 'Noto Sans KR', serif;"><i class="fa fa-info-circle fa-fw"></i>공고찾니는?</a>
+              <a class="nav-link js-scroll-trigger" href="#about" style="font-family: 'Noto Sans KR', serif;"><i class="fa fa-info fa-fw"></i>공고찾니는?</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link js-scroll-trigger" href="#team" style="font-family: 'Noto Sans KR', serif;"><i class="fa fa-envelope-o fa-fw"></i>Developer</a>
+              <a class="nav-link js-scroll-trigger" href="#team" style="font-family: 'Noto Sans KR', serif;"><i class="fa fa-keyboard-o fa-fw"></i>Developer</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" th:href="@{/statistics}" style="font-family: 'Noto Sans KR', serif;"><i class="fa fa-bar-chart-o fa-fw"></i>통계</a>
@@ -159,100 +159,91 @@
       </div>
     </header>
 
-    <!-- Interest -->
+    <!-- interest -->
     <th:block th:if="${job_interest_info != null}">
-    <section class="bg-light" id="portfolio2" style="padding: 20px 0;">
-      <div class="container">
-        <div class="row">
-          <div class="col-lg-12 text-center">
-            <h6 class="section-heading text-uppercase">
+      <section id="portfolio2" class="bg-light"  style="padding: 20px 0;">
+        <div class="container">
+          <div class="row">
+            <div class="col-lg-12 text-center">
+              <h6 class="section-heading text-uppercase">
               <span class="fa-stack fa-4x">
                 <i class="fa fa-stop fa-stack-2x text-info"></i>
                 <i class="fa fa-rocket fa-stack-1x fa-inverse"></i>
               </span>
-            </h6>
-            <h3 class="section-subheading text-muted" style="margin-bottom: 30px;font-family: 'cwTeXHei', 'Noto Sans KR', serif;">맞춤 공고</h3>
-            <!--<tenping class="adsbytenping" style="width: 100%; margin: 0px auto; display: block; max-width: 580px;" tenping-ad-client="ULkZYhHDonqxNgJx%2bd2t5XgWCcx0QUdnsdGDbY1yMIshP4q34efQL0ddArqjWnF3" tenping-ad-display-type="UD8Mia8gyIoT5Z2MT6VB3Q%3d%3d"></tenping><script async src='//ads.tenping.kr/scripts/adsbytenping.min.js' ></script>-->
-            <div>
-              <th:block th:if="${job_interest_info != null}">
-                <ul class="nav nav-tabs">
-                  <li th:each="category,iterStat : ${job_interest_info}" class="nav-item">
-                    <a th:class="'nav-link' + ${iterStat.index == 0 ? ' active' : ''}" th:href="'#interest-ct-tab' + ${iterStat.index}" data-toggle="tab" style="font-family: 'Noto Sans KR', serif;"><small th:text="${category.key} + ' (' + ${category.totalSize} + ')'"></small></a>
-                  </li>
-                </ul>
-              </th:block>
-            </div>
-            <br />
-          </div>
-        </div>
+              </h6>
 
-        <div class="tab-content">
-          <th:block th:each="joblist,iterStat : ${job_interest_info}" th:if="${job_interest_info != null}">
-            <div th:class="'tab-pane fade' + ${iterStat.index == 0 ? ' active in show' : ''}" th:id="'interest-ct-tab' + ${iterStat.index}">
+              <h3 class="section-subheading" style="margin-bottom: 30px;font-family: 'Noto Sans KR', serif;">맞춤 공고</h3>
 
-              <th:block th:if="${joblist.jobListMap != null}">
-                <table class="table table-striped table-bordered" style="font-family: 'Noto Sans KR', serif;">
-                  <thead>
-                  <tr class="text-center">
-                    <th style="width:100%"><small>지역별</small></th>
-                  </tr>
-                  </thead>
-                  <tbody>
-                  <tr>
-                    <td class="align-middle">
-                      <ul class="nav nav-pills">
-                        <li th:each="ac,iterStat : ${joblist.jobListMap}" class="nav-item">
-                          <a th:class="'nav-link' + ${iterStat.index == 0 ? ' active' : ''}" th:href="'#interest-ac-tab-' + ${joblist.seq} + '-' + ${iterStat.index}" data-toggle="tab"><small th:text="${ac.key} + ' (' + ${ac.value.size()} + ')'"></small></a>
-                        </li>
-                      </ul>
-                    </td>
-                  </tbody>
-                </table>
-              </th:block>
-
-              <div class="tab-content">
-                <th:block th:each="list,iterStat : ${joblist.jobListMap}" th:if="${joblist.jobListMap != null}">
-                  <div th:class="'tab-pane fade' + ${iterStat.index == 0 ? ' active in show' : ''}" th:id="'interest-ac-tab-' + ${joblist.seq} + '-' + ${iterStat.index}">
-                    <div class="row">
-                      <th:block th:each="doc,iterStat : ${list.value}" th:if="${list.value != null}">
-                        <div class="col-md-4 col-sm-6 portfolio2-item">
-
-                          <div class="portfolio2-caption">
-
-                            <a class="portfolio2-link" th:onclick="'javascript:show_detail(' + ${doc.id} + ')'">
-                              <div class="portfolio2-hover">
-                                <div class="portfolio2-hover-content">
-                                  <i class="fa fa-plus fa-3x"></i>
-                                </div>
-                              </div>
-
-                              <img class="img-fluid lazy" style="border: 1px solid #aaaaaa;padding:1px;" th:attr="data-src=${(doc.firstimage2 != null) ? doc.firstimage2 : '/img/no_image_available.png'}" th:alt="${doc.title}"/>
-
-                            </a>
-
-                            <h6 th:text="${doc.titleshort}" style="font-family: 'cwTeXHei', 'Noto Sans KR', serif;"></h6>
-                            <div class="text-left">
-                              <small class="text-muted" th:text="${doc.overviewshort}"></small>
-                            </div>
-                            <hr/>
-                            <ul class="post-footer">
-                              <li class="fa fa-eye" th:text="' ' +${doc.clickcount}"></li>
-                            </ul>
-                          </div>
-                        </div>
-                      </th:block>
-                    </div>
-                  </div>
+              <div>
+                <th:block th:if="${job_interest_info != null}">
+                  <ul class="nav nav-tabs">
+                    <li th:each="category,iterStat : ${job_interest_info}" class="nav-item">
+                      <a th:class="'nav-link' + ${iterStat.index == 0 ? ' active' : ''}" th:href="'#interest-ct-tab' + ${iterStat.index}" data-toggle="tab" style="font-family: 'Noto Sans KR', serif;"><small th:text="${category.key} + ' (' + ${category.totalSize} + ')'"></small></a>
+                    </li>
+                  </ul>
                 </th:block>
               </div>
+              <br />
             </div>
-          </th:block>
+          </div>
+
+          <div class="tab-content">
+            <th:block th:each="joblist,iterStat : ${job_interest_info}" th:if="${job_interest_info != null}">
+              <div th:class="'tab-pane fade' + ${iterStat.index == 0 ? ' active in show' : ''}" th:id="'interest-ct-tab' + ${iterStat.index}">
+
+                <th:block th:if="${joblist.jobListMap != null}">
+                  <table class="table table-striped table-bordered" style="font-family: 'Noto Sans KR', serif;">
+                    <thead>
+                    <tr class="text-center">
+                      <th style="width:100%"><small>지역별</small></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                      <td class="align-middle">
+                        <ul class="nav nav-pills">
+                          <li th:each="ac,iterStat : ${joblist.jobListMap}" class="nav-item">
+                            <a th:class="'nav-link' + ${iterStat.index == 0 ? ' active' : ''}" th:href="'#interest-ac-tab-' + ${joblist.seq} + '-' + ${iterStat.index}" data-toggle="tab"><small th:text="${ac.key} + ' (' + ${ac.value.size()} + ')'"></small></a>
+                          </li>
+                        </ul>
+                      </td>
+                    </tbody>
+                  </table>
+                </th:block>
+
+                <div class="tab-content">
+                  <th:block th:each="list,iterStat : ${joblist.jobListMap}" th:if="${joblist.jobListMap != null}">
+                    <div th:class="'tab-pane fade' + ${iterStat.index == 0 ? ' active in show' : ''}" th:id="'interest-ac-tab-' + ${joblist.seq} + '-' + ${iterStat.index}">
+                      <div class="row">
+                        <th:block th:each="doc,iterStat: ${list.value}" th:if="${list.value != null}">
+                          <div class="col-md-4 col-sm-6 portfolio2-item">
+                            <div class="portfolio2-caption">
+                              <div class="text-left aligh-middle" style="padding-bottom:5px;">
+                                <i class="fa fa-building-o"></i>
+                                <small class="text-muted" th:text="${doc.get('company-name-short')}"></small>
+                              </div>
+
+                              <a style="color: #000000;" th:onclick="'javascript:show_detail(' + ${doc.get('id')} + ')'">
+                                <h6 class="text-left" th:text="${doc.get('position-title-short')}" style="font-family: 'cwTeXHei', 'Noto Sans KR', serif;"></h6>
+                              </a>
+
+                              <hr/>
+                              <ul class="post-footer" style="margin: 0; padding: 0;font-family: 'cwTeXHei', 'Noto Sans KR', serif;font-size:13px;">
+                                <li class="fa fa-user" style="color:#28a745;" th:text="' ' +${doc.get('position-job-type-short')}"></li>
+                                <li class="fa fa-calendar" style="color:#28a745;" th:text="' ~ ' + ${doc.get('expiration-timestamp-formatted')}"></li>
+                              </ul>
+                            </div>
+                          </div>
+                        </th:block>
+                      </div>
+                    </div>
+                  </th:block>
+                </div>
+              </div>
+            </th:block>
+          </div>
         </div>
-
-        <!--<tenping class="adsbytenping" style="width: 100%; margin: 0px auto; display: block; max-width: 768px;" tenping-ad-client="ULkZYhHDonqxNgJx%2bd2t5XgWCcx0QUdnsdGDbY1yMIshP4q34efQL0ddArqjWnF3" tenping-ad-display-type="1LawCE8FqKOhetXZhMopsQ%3d%3d"></tenping><script async src='//ads.tenping.kr/scripts/adsbytenping.min.js' ></script>-->
-
-      </div>
-    </section>
+      </section>
     </th:block>
 
     <!-- jobs -->
@@ -350,7 +341,7 @@
             <h6 class="section-heading text-uppercase">
               <span class="fa-stack fa-4x">
                 <i class="fa fa-stop fa-stack-2x text-info"></i>
-                <i class="fa fa-file-text-o fa-stack-1x fa-inverse"></i>
+                <i class="fa fa-info fa-stack-1x fa-inverse"></i>
               </span>
             </h6>
             <h3 class="section-subheading" style="margin-bottom: 30px;font-family: 'cwTeXHei', 'Noto Sans KR', serif;">공고찾니는 ...</h3>
@@ -373,7 +364,7 @@
             <h6 class="section-heading text-uppercase">
               <span class="fa-stack fa-4x">
                 <i class="fa fa-stop fa-stack-2x text-info"></i>
-                <i class="fa fa-envelope-o fa-stack-1x fa-inverse"></i>
+                <i class="fa fa-keyboard-o fa-stack-1x fa-inverse"></i>
               </span>
             </h6>
             <h3 class="section-subheading" style="margin-bottom: 30px;font-family: 'cwTeXHei', 'Noto Sans KR', serif;">DEVELOPER</h3>

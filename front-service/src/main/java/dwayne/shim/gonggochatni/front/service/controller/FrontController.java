@@ -10,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.Resource;
@@ -32,9 +33,9 @@ public class FrontController {
         List<Job2DepthInfo> result = frontService.getNewJobs();
         model.addAttribute(ModelField.JOB_INFO.label(), result.size() == 0 ? null : result);
 
-        /*String userId = session.getId();
-        List<Destination2DepthInfo> interestResult = frontService.getInterestingDestinations(userId);
-        model.addAttribute(ModelField.DESTINATION_INTEREST_INFO.label(), interestResult.size() == 0 ? null : interestResult);*/
+        String userId = session.getId();
+        List<Job2DepthInfo> interestResult = frontService.getInterestingJobs(userId);
+        model.addAttribute(ModelField.JOB_INTEREST_INFO.label(), interestResult.size() == 0 ? null : interestResult);
 
         return "main-page";
     }
@@ -51,9 +52,20 @@ public class FrontController {
         Map<String, String> detailResult = frontService.getJobDetail(jobId, userId, ignoreUser);
         model.addAttribute(ModelField.JOB_DETAIL_INFO.label(), detailResult.size() == 0 ? null : detailResult);
 
+        List<Job2DepthInfo> interestResult = frontService.getInterestingJobs(userId);
+        model.addAttribute(ModelField.JOB_INTEREST_INFO.label(), interestResult.size() == 0 ? null : interestResult);
+
         List<Job2DepthInfo> similarResult = frontService.getSimilarJobs(jobId);
         model.addAttribute(ModelField.JOB_SIMILAR_INFO.label(), similarResult.size() == 0 ? null : similarResult);
 
         return "detail-page";
+    }
+
+    @RequestMapping(value = {"/search-jobs"}, produces = "application/json; charset=utf8", method = {RequestMethod.GET})
+    public String searchJobs(Model model,
+                             @RequestParam(value = "keywords") String keywords) {
+        List<Job2DepthInfo> result = frontService.searchJobs(keywords);
+        model.addAttribute(ModelField.JOB_INFO.label(), result.size() == 0 ? null : result);
+        return "search-page";
     }
 }
