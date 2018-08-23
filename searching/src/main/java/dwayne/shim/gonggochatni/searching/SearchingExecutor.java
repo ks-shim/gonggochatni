@@ -1,5 +1,6 @@
 package dwayne.shim.gonggochatni.searching;
 
+import dwayne.shim.gonggochatni.common.analyzer.NGramAnalyzer;
 import dwayne.shim.gonggochatni.common.indexing.JobDataIndexField;
 import dwayne.shim.gonggochatni.common.searching.LuceneResultField;
 import lombok.extern.log4j.Log4j2;
@@ -39,7 +40,7 @@ public class SearchingExecutor {
 
         // 1. Initialize ...
         this.bufferSize = bufferSize;
-        this.analyzer = new StandardAnalyzer();
+        this.analyzer = new NGramAnalyzer();
 
         try {
             init(indexDirectoryLocation);
@@ -292,7 +293,7 @@ public class SearchingExecutor {
     }
 
     public static void main(String[] args) throws Exception {
-        SearchingExecutor se = new SearchingExecutor("D:/JobIndexData1");
+        SearchingExecutor se = new SearchingExecutor("D:/JobDataIndex1");
 
         List<String> fieldsToGet = new ArrayList<>();
         for(JobDataIndexField field : JobDataIndexField.values())
@@ -305,8 +306,9 @@ public class SearchingExecutor {
                 JobDataIndexField.POSITION_TITLE_KEYWORDS.label()
         };
 
-        Sort sort = new Sort(new SortedNumericSortField(JobDataIndexField.MODIFICATION_TIMESTAMP_SORT.label(), SortField.Type.LONG, true));
-        SearchResult result = se.search(null, new MatchAllDocsQuery(), sort, 100);
+        //Sort sort = new Sort(new SortedNumericSortField(JobDataIndexField.MODIFICATION_TIMESTAMP_SORT.label(), SortField.Type.LONG, true));
+        //SearchResult result = se.search(null, new MatchAllDocsQuery(), sort, 100);
+        SearchResult result = se.search(fieldsToGet.toArray(new String[fieldsToGet.size()]), fieldsToSearch, "머신 러닝", 100);
         System.out.println(result);
     }
 }
