@@ -82,8 +82,9 @@
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-dark fixed-top" id="mainNav">
       <div class="container">
-        <div class="logo">
-          <a th:href="@{/main}"><img th:src="${'/img/logos/gonggochatni_icon_48x48.png'}" title="gonggochatni"></a>
+        <div class="logo ld-over">
+          <div style="font-size:24px;color:#333;" class="ld ld-ring ld-spin"></div>
+          <a th:href="@{/main}" th:onclick="'javascript:show_logo_progress(this)'"><img th:src="${'/img/logos/gonggochatni_icon_48x48.png'}" title="gonggochatni"></a>
         </div>
         <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
           Menu
@@ -139,13 +140,14 @@
 
     <!-- Header -->
     <header class="masthead">
-      <div class="container">
-        <div class="intro-text">
+      <div class="container ld-over-full">
+        <div style="font-size:72px;color:#333;" class="ld ld-ring ld-spin"></div>
+        <div id="masthead-div" class="intro-text">
           <div class="intro-lead-in" style="font-family: 'cwTeXHei', 'Noto Sans KR', serif;">똑똑한 구직 도우미</div>
           <div class="intro-heading text-uppercase" style="font-family: 'cwTeXHei', 'Noto Sans KR', serif;">공고찾니?</div>
           <form id="search_form_header" role="form" th:action="@{/search-jobs}" method="get">
             <div class="form-group">
-              <div class="input-group" s>
+              <div class="input-group">
                 <input id="keywords-header" name="keywords" style="border-color: #555555;opacity: .75;font-family: 'Noto Sans KR', serif;" type="text" class="form-control" placeholder="" th:onkeypress="'javascript:if(event.keyCode==13) {search_header(); return false;}'"/>
                 <div class="input-group-append">
                   <button type="button" class="btn btn-block" style="fon-size: 18px;border-color: #555555;background-color: #aaaaaa;opacity: .65;" th:onclick="'javascript:search_header();'">
@@ -495,6 +497,7 @@
         text = text.trim();
         if(text == '') return;
 
+        show_logo_progress(document.getElementById("masthead-div"));
         $("#search_form").submit();
       }
 
@@ -503,6 +506,7 @@
         text = text.trim();
         if(text == '') return;
 
+        show_logo_progress(document.getElementById("masthead-div"));
         $("#search_form_header").submit();
       }
 
@@ -518,6 +522,9 @@
         form.submit();
       }
 
+      function show_logo_progress(elemt) {
+        elemt.parentNode.classList.add('running');
+      }
     </script>
 
   </body>
