@@ -25,6 +25,7 @@ public class SearchingExecutor {
     private IndexWriter indexWriter;
 
     private final Analyzer analyzer;
+    private final Analyzer analyzerForId;
     private final double bufferSize;
 
     private final Object lock = new Object();
@@ -41,6 +42,7 @@ public class SearchingExecutor {
         // 1. Initialize ...
         this.bufferSize = bufferSize;
         this.analyzer = new NGramAnalyzer();
+        this.analyzerForId = new StandardAnalyzer();
 
         try {
             init(indexDirectoryLocation);
@@ -213,6 +215,16 @@ public class SearchingExecutor {
         return search(fieldsToGet, buildBoolQuery(fieldsToSearch, keywords).build(), resultLimit);
     }
 
+    public SearchResult searchById(String[] fieldsToGet,
+                                   String[] fieldsToSearch,
+                                   String ids,
+                                   int resultLimit) throws Exception {
+
+        QueryParser parser = new MultiFieldQueryParser(fieldsToSearch, analyzerForId);
+        Query query = parser.parse(ids);
+        return search(fieldsToGet, query, resultLimit);
+    }
+    
     public SearchResult searchSimilar(String[] fieldsToGet,
                                        String[] fieldsToSearch,
                                        String keywords,

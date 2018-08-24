@@ -81,7 +81,7 @@ public class JobDataService {
     //***************************************************************************************
     // Interesting jobs ...
     //***************************************************************************************
-    public List<JobData> interestingLocations(String keywords) throws Exception {
+    public List<JobData> interestingJobs(String keywords) throws Exception {
         return searchJobs(keywords);
     }
 
@@ -106,7 +106,7 @@ public class JobDataService {
     };
     public List<JobData> getSimilarJobs(String jobId) throws Exception {
         // 1. get keywords data of the job ...
-        SearchResult result = searchingExecutor.search(
+        SearchResult result = searchingExecutor.searchById(
                 fieldToGetForSimilarJobs1,
                 fieldToSearchForSimilarJobs1,
                 jobId,
@@ -136,7 +136,7 @@ public class JobDataService {
             JobDataIndexField.ID.label()
     };
     public JobData getJobDetail(String jobId) throws Exception {
-        SearchResult result = searchingExecutor.search(null, fieldsToSearchForJobDetail, jobId, 1);
+        SearchResult result = searchingExecutor.searchById(null, fieldsToSearchForJobDetail, jobId, 1);
         return result.isEmpty() ? JobData.dummyJobData() : new JobData(result.mapAt(0));
     }
 

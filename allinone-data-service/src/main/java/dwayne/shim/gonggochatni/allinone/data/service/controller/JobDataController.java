@@ -82,7 +82,7 @@ public class JobDataController {
             String userKeywords = userPreferenceDataService.getUserKeywords(userId);
             if(userKeywords == null) throw new NullPointerException();
 
-            result = jobDataService.interestingLocations(userKeywords);
+            result = jobDataService.interestingJobs(userKeywords);
         } catch (Exception e) {
             result = new ArrayList<>();
         }
