@@ -91,7 +91,7 @@
         <div class="collapse navbar-collapse" id="navbarResponsive">
           <ul class="navbar-nav text-uppercase ml-auto">
             <li class="nav-item">
-              <a class="nav-link" href="#portfolio" style="font-family: 'Noto Sans KR', serif;"><i class="fa fa-bar-chart-o fa-fw"></i>통계</a>
+              <a class="nav-link" th:onclick="'javascript:show_full_progress()'" th:href="@{/statistics}" style="font-family: 'Noto Sans KR', serif;"><i class="fa fa-bar-chart-o fa-fw"></i>통계</a>
             </li>
 
           </ul>
@@ -152,8 +152,8 @@
       </div>
     </header>
 
-    <div id="masthead-div" class="ld-over-full">
-      <div style="font-size:72px;color:#333;" class="ld ld-ring ld-spin"></div>
+    <div id="ld-div" class="ld-over-full">
+      <div style="font-size:72px;color:#000;" class="ld ld-ring ld-spin"></div>
     </div>
 
     <!-- jobs -->
@@ -298,7 +298,7 @@
         text = text.trim();
         if(text == '') return;
 
-        document.getElementById("sf_btn_div").classList.add('running');
+        show_full_progress();
         $("#search_form").submit();
       }
 
@@ -307,7 +307,7 @@
         text = text.trim();
         if(text == '') return;
 
-        document.getElementById("sfh_btn_div").classList.add('running');
+        show_full_progress();
         $("#search_form_header").submit();
       }
 
@@ -325,6 +325,10 @@
 
       function show_logo_progress(elemt) {
         elemt.parentNode.classList.add('running');
+      }
+
+      function show_full_progress() {
+        document.getElementById("ld-div").classList.add('running');
       }
 
     </script>
