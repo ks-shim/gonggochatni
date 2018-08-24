@@ -489,13 +489,6 @@
     <!-- Custom scripts for this template -->
     <script th:src="@{/js/agency.min.js}"></script>
 
-    <!-- image lazy loading -->
-    <script th:src="@{https://cdnjs.cloudflare.com/ajax/libs/vanilla-lazyload/8.14.0/lazyload.min.js}"></script>
-
-    <script>
-        new LazyLoad();
-    </script>
-
     <script th:inline="javascript">
       function search() {
         var text = $("#keywords").val();
