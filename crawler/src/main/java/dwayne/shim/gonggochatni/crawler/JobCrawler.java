@@ -68,8 +68,9 @@ public class JobCrawler {
                 Map<String, String> oldDocMap = objectMapper.readValue(oldFile, Map.class);
                 if (oldDocMap == null) continue;
                 String expiration = oldDocMap.get(JobDataIndexField.EXPIRATION_TIMESTAMP.label());
+                String active = oldDocMap.get(JobDataIndexField.ACTIVE.label());
                 long now = System.currentTimeMillis()/1000;
-                if(Long.parseLong(expiration) > now) continue;
+                if(Long.parseLong(expiration) > now && "1".equals(active)) continue;
                 System.out.println("DELETED : (" + ++deletedCount + '/' + total + ") " + now + " - " + expiration);
             } catch (Exception e) {
                 continue;
